@@ -10,9 +10,11 @@ class Manager
 private:
     // the filepath for the result log
     const char* RESULT_LOG_PATH = "log.txt";
+    const char* ERROR_LOG_PATH = "logERR.txt";
     
 
     std::ofstream fout;
+    std::ofstream ferr;
 
 
 public:
@@ -22,6 +24,7 @@ public:
 
 private:
     Result Load(const char* filepath);
+    Result Print();
 
 };
 

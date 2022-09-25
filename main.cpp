@@ -10,4 +10,4 @@ int main(int argc, char* argv[])
     m.Run(commandFilepath);
 
     return 0;
-}
+} 
