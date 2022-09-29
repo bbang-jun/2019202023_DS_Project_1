@@ -1,37 +1,58 @@
 #include "Manager.h"
-#include<iostream>
+#include "Loaded_LIST.h"
+#include <iostream>
 using namespace std;
-#include<fstream>
-#include<string>
+#include <fstream>
+#include <string>
+#include <cstring> // use strtok
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
-    // const char* commandFilepath = "command.txt";
-    // if (argc > 1)
-    //     commandFilepath = argv[1];
+    Loaded_LIST *list = new Loaded_LIST;
 
-    // Manager m;
-    // m.Run(commandFilepath);
+    ifstream inCommand("command.txt");
+    if (!inCommand)
+        cout << "Unable to open command.txt" << endl;
+    else
+    {
+        while (!inCommand.eof())
+        {
+            string command;
+            string number;
+            string title;
+            string temp;
 
+            getline(inCommand, command, '\n');
 
-    string str;
-    fstream fs;
-    fs.open("img_files/filesnumbers.csv", ios::in);
+            if (command == "LOAD")
+            {
+                int i = 0;
+                ifstream inCSV("img_files/filesnumbers.csv");
+                if (!inCSV) // 7p implementation CSV ERROR code
+                {
+                    cout << "========ERROR========" << endl;
+                    cout << "100" << endl;
+                    cout << "====================" << endl;
+                }
+                else
+                {
 
-    while(!fs.eof()){
-        getline(fs, str, ',');
-        cout<<str<<endl;
+                    cout << "=======LOAD========" << endl;
+                    while (getline(inCSV, number, ',')&&getline(inCSV, title, '\n'))
+                    {
+                        cout<<number<<'/'<<title<<endl;
+                        list->INSERT(command, title, "img_files", number);
+                        //cout<<title<<"/"<<number<<endl;
+                    }
+                    getline(inCSV, temp, ',');
+                    
+                    //temp2=temp.c_str();
+                    inCSV.close();
+                    cout << "===================" << endl;
+                }
+            }
+        }
     }
-    fs.close();
-    
-    
-    ifstream in("command.txt");
-    if(!in)
-        cout<<"Unable to open command.txt"<<endl;
-    else{
-        
-    }
-
-
+    //list->PRINT();
     return 0;
-} 
+}
