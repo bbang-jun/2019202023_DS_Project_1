@@ -33,8 +33,7 @@ class D2Node{
     Loaded_LIST_Node* getNext(); // 링링 가져오는 용도
     void setToNew(D2Node* New); // img가 new 가리키는 용도
     D2Node* getToNew();
-    //void setToImg(D2Node* Img); // new가 img 가리키는 용도
-    //D2Node* getToImg();
+
 };
 
 class Loaded_LIST{
@@ -50,7 +49,7 @@ class Loaded_LIST{
 
 
     public:
-    int imgCount;
+    int imgCount=0;
     Loaded_LIST();
     void INSERT(string command, string number, string folder, string title);
     void DELETE(); // delete
