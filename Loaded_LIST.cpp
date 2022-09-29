@@ -27,12 +27,16 @@ Loaded_LIST::Loaded_LIST()
     imgPrev = NULL;
     newPrev = NULL;
     imgCount = 0; // 100개 넘겼는지 판단
-    img_files = new D2Node;
-    new_files = new D2Node;
+
+
 }
 
 void Loaded_LIST::INSERT(string command, string title, string folder, string number)
 {
+    if(this->imgCount==100){
+        //todo:implementation
+        // delete
+    }
     Loaded_LIST_Node *newNode = new Loaded_LIST_Node;
     newNode->setNumber(number);
     newNode->setFolder(folder);
@@ -41,6 +45,7 @@ void Loaded_LIST::INSERT(string command, string title, string folder, string num
 
     if (command == "LOAD")
     {
+        img_files = new D2Node;
         if (img_files->getNext() == NULL)
         {
             imgHead = newNode;
@@ -58,12 +63,15 @@ void Loaded_LIST::INSERT(string command, string title, string folder, string num
     }
     else if (command == "ADD")
     {
+        new_files = new D2Node;
         if (new_files->getNext() == NULL)
         {
             newHead = newNode;
             newTail = newHead;
             img_files->setToNew(new_files);
             new_files->setNext(newHead);
+
+            this->imgCount++;
         }
     }
 }
@@ -85,8 +93,23 @@ void Loaded_LIST::PRINT()
         cout << curNode->getTitle() << "/" << curNode->getNumber() << endl;
         curNode = curNode->getNext();
     }
+
+    curNode = newHead;
+
+    while (curNode != NULL)
+    {
+        cout << curNode->getTitle() << "/" << curNode->getNumber() << endl;
+        curNode = curNode->getNext();
+    }
 }
 
 void Loaded_LIST::ADD()
 {
+}
+
+bool Loaded_LIST::LOADED_LIST_CHECK(){
+    if(imgHead==NULL)
+    return true;
+    else
+    return false;
 }

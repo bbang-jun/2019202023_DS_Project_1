@@ -59,9 +59,9 @@ int main(int argc, char *argv[])
                         char *ptr2 = strtok(ch2, "\r\n.RAW");
                         title = ptr2; // char* -> string 후 노드에 넣기
 
-                        list->INSERT(command, title, "img_files", number);
+                        //list->INSERT(command, title, "img_files", number);
                     }
-                    list->PRINT();
+                    //list->PRINT();
 
                     inCSV.close();
                     cout << "===================" << endl;
@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
                 ptr1 = strtok(NULL, " ");
                 ptr2 = strtok(NULL, " ");
 
-                if (ptr1 == NULL||ptr2==NULL)
+                if (ptr1 == NULL||ptr2==NULL||list->LOADED_LIST_CHECK())
                 {
                     cout << "========ERROR========" << endl;
                     cout << "200" << endl;

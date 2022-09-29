@@ -56,5 +56,6 @@ class Loaded_LIST{
     void FIND(); // 
     void PRINT();
     void ADD();
+    bool LOADED_LIST_CHECK();
 };
 
