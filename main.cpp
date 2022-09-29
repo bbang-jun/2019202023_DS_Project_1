@@ -5,6 +5,7 @@ using namespace std;
 #include <fstream>
 #include <string>
 #include <cstring> // use strtok
+#include <string.h>
 
 int main(int argc, char *argv[])
 {
@@ -20,7 +21,6 @@ int main(int argc, char *argv[])
             string command;
             string number;
             string title;
-            string temp;
 
             getline(inCommand, command, '\n');
 
@@ -38,21 +38,33 @@ int main(int argc, char *argv[])
                 {
 
                     cout << "=======LOAD========" << endl;
-                    while (getline(inCSV, number, ',')&&getline(inCSV, title, '\n'))
+                    while (!inCSV.eof())
                     {
-                        cout<<number<<'/'<<title<<endl;
+                        getline(inCSV, number, ','); // string
+                        int str_length1 = number.length(); 
+                        char ch1[str_length1];
+                        strcpy(ch1, number.c_str()); // string -> char*
+                        char*ptr1=strtok(ch1, ",\n "); 
+                        if(ptr1==NULL) continue;
+                        number = ptr1; // char* -> string 후 노드에 넣기
+
+                        getline(inCSV, title, '\n'); // string
+                        int str_length2 = title.length();
+                        char ch2[str_length2];
+                        strcpy(ch2, title.c_str()); // string -> char*
+                        char*ptr2=strtok(ch2, ",\n.RAW");
+                        title = ptr2; // char* -> string 후 노드에 넣기
+
                         list->INSERT(command, title, "img_files", number);
-                        //cout<<title<<"/"<<number<<endl;
+
                     }
-                    getline(inCSV, temp, ',');
+                    list->PRINT();
                     
-                    //temp2=temp.c_str();
                     inCSV.close();
                     cout << "===================" << endl;
                 }
             }
         }
     }
-    //list->PRINT();
     return 0;
 }

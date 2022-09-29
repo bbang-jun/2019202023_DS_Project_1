@@ -82,7 +82,7 @@ void Loaded_LIST::PRINT()
 
     while (curNode != NULL)
     {
-        cout << curNode->getNumber() << "/" << curNode->getTitle() << endl;
+        cout << curNode->getTitle() << "/" << curNode->getNumber() << endl;
         curNode = curNode->getNext();
     }
 }
