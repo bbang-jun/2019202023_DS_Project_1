@@ -13,7 +13,8 @@ Loaded_LIST_Node *Loaded_LIST_Node::getNext() { return this->next; }
 
 void D2Node::setTitle(string title) { this->title = title; }
 string D2Node::getTitle() { return this->title; }
-void D2Node::setToNew(D2Node *New) { img_files->setToNew(New); }
+void D2Node::setD2Next(D2Node *New) {this->D2Next=New;}
+D2Node* D2Node::getD2Next(){return this->D2Next;}
 void D2Node::setNext(Loaded_LIST_Node* next){this->next=next;}
 Loaded_LIST_Node* D2Node::getNext(){return this->next;}
 // void D2Node::setToImg(D2Node* Img){new_files->setToImg(Img);}
@@ -42,12 +43,12 @@ void Loaded_LIST::INSERT(string command, string title, string folder, string num
     newNode->setFolder(folder);
     newNode->setTitle(title);
     newNode->setNext(NULL);
-
     if (command == "LOAD")
     {
-        img_files = new D2Node;
-        if (img_files->getNext() == NULL)
+
+        if (img_files == NULL)
         {
+            img_files = new D2Node;
             imgHead = newNode;
             imgTail = imgHead;
             img_files->setNext(imgHead);
@@ -63,14 +64,19 @@ void Loaded_LIST::INSERT(string command, string title, string folder, string num
     }
     else if (command == "ADD")
     {
-        new_files = new D2Node;
-        if (new_files->getNext() == NULL)
+        if (new_files == NULL)
         {
+            new_files = new D2Node;
             newHead = newNode;
             newTail = newHead;
-            img_files->setToNew(new_files);
+            img_files->setD2Next(new_files);
             new_files->setNext(newHead);
 
+            this->imgCount++;
+        }
+        else{
+            newTail->setNext(newNode);
+            newTail = newTail->getNext();
             this->imgCount++;
         }
     }
@@ -93,14 +99,15 @@ void Loaded_LIST::PRINT()
         cout << curNode->getTitle() << "/" << curNode->getNumber() << endl;
         curNode = curNode->getNext();
     }
+    // ADD까지 출력
 
-    curNode = newHead;
+    // curNode = newHead;
 
-    while (curNode != NULL)
-    {
-        cout << curNode->getTitle() << "/" << curNode->getNumber() << endl;
-        curNode = curNode->getNext();
-    }
+    // while (curNode != NULL)
+    // {
+    //     cout << curNode->getTitle() << "/" << curNode->getNumber() << endl;
+    //     curNode = curNode->getNext();
+    // }
 }
 
 void Loaded_LIST::ADD()

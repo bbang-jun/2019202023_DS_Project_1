@@ -23,17 +23,18 @@ class D2Node{
     private:
     string title;
     Loaded_LIST_Node* next;
+    D2Node * D2Next;
     D2Node * img_files;
-    D2Node * new_files;
+    D2Node * imgToNew;
+    
 
     public:
     void setTitle(string title);
     string getTitle();
     void setNext(Loaded_LIST_Node* next); // 링링 가르키는 용도
     Loaded_LIST_Node* getNext(); // 링링 가져오는 용도
-    void setToNew(D2Node* New); // img가 new 가리키는 용도
-    D2Node* getToNew();
-
+    void setD2Next(D2Node* New); // img가 new 가리키는 용도
+    D2Node* getD2Next();
 };
 
 class Loaded_LIST{
@@ -58,4 +59,3 @@ class Loaded_LIST{
     void ADD();
     bool LOADED_LIST_CHECK();
 };
-

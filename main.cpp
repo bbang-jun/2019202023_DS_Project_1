@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
                     {
                         getline(inCSV, number, ','); // string
                         int str_length1 = number.length();
-                        char ch1[str_length1];
+                        char *ch1 = new char[str_length1];
                         strcpy(ch1, number.c_str()); // string -> char*
                         char *ptr1 = strtok(ch1, ",\n ");
                         if (ptr1 == NULL)
@@ -54,14 +54,13 @@ int main(int argc, char *argv[])
 
                         getline(inCSV, title, '\n'); // string
                         int str_length2 = title.length();
-                        char ch2[str_length2];
+                        char *ch2 = new char[str_length2];
                         strcpy(ch2, title.c_str()); // string -> char*
                         char *ptr2 = strtok(ch2, "\r\n.RAW");
                         title = ptr2; // char* -> string 후 노드에 넣기
-
-                        //list->INSERT(command, title, "img_files", number);
+                        list->INSERT(command, title, "img_files", number);
                     }
-                    //list->PRINT();
+                    list->PRINT();
 
                     inCSV.close();
                     cout << "===================" << endl;
@@ -69,11 +68,11 @@ int main(int argc, char *argv[])
             }
             else if (command == "ADD")
             {
-                char* ptr1, *ptr2;
+                char *ptr1, *ptr2;
                 ptr1 = strtok(NULL, " ");
                 ptr2 = strtok(NULL, " ");
 
-                if (ptr1 == NULL||ptr2==NULL||list->LOADED_LIST_CHECK())
+                if (ptr1 == NULL || ptr2 == NULL || list->LOADED_LIST_CHECK())
                 {
                     cout << "========ERROR========" << endl;
                     cout << "200" << endl;
@@ -90,10 +89,34 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
+                                        cout << "=======ADD========" << endl;
                     cout << "success" << endl;
+                    cout << "===================" << endl;
+                    while (!newCSV.eof())
+                    {
+                        getline(newCSV, number, ','); // string
+                        int str_length1 = number.length();
+                        char *ch3 = new char[str_length1];
+                        strcpy(ch3, number.c_str()); // string -> char*
+                        char *ptr3 = strtok(ch3, ",\n ");
+
+                        if (ptr3 == NULL)
+                            continue;
+                        number = ptr3; // char* -> string 후 노드에 넣기
+
+                        getline(newCSV, title, '\n'); // string
+                        int str_length2 = title.length();
+                        char *ch4 = new char[str_length2];
+                        strcpy(ch4, title.c_str()); // string -> char*
+                        char *ptr4 = strtok(ch4, ".RAW\r\n");
+                        title = ptr4; // char* -> string 후 노드에 넣기
+                        //cout<<title<<" "<<number<<endl;
+                        list->INSERT(command, title, "new_files", number);
+                    }
+                    //list->PRINT();
 
                     newCSV.close();
-                    cout << "===================" << endl;
+
                 }
             }
         }
