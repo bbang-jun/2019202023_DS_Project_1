@@ -7,7 +7,7 @@ using namespace std;
 #include <cstring> // use strtok
 #include <string.h>
 
-int main(int argc, char *argv[])
+int main()
 {
     Loaded_LIST *list = new Loaded_LIST;
 
@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-                                        cout << "=======ADD========" << endl;
+                    cout << "=======ADD========" << endl;
                     cout << "success" << endl;
                     cout << "===================" << endl;
                     while (!newCSV.eof())
@@ -116,8 +116,11 @@ int main(int argc, char *argv[])
                     //list->PRINT();
 
                     newCSV.close();
-
+                
                 }
+            }
+            else if(command=="MODIFY"){
+                
             }
         }
     }

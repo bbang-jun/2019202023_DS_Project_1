@@ -53,8 +53,8 @@ class Loaded_LIST{
     int imgCount=0;
     Loaded_LIST();
     void INSERT(string command, string number, string folder, string title);
-    void DELETE(); // delete
-    void FIND(); // 
+    void DELETE(string folderName, string title, string number); // delete
+    Loaded_LIST_Node* FIND(string folderName, string title); // 
     void PRINT();
     void ADD();
     bool LOADED_LIST_CHECK();
