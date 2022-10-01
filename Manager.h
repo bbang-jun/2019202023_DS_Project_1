@@ -1,9 +1,12 @@
 #define _CRT_SECURE_NO_WARNINGS
-#ifndef SOLUTION_H
-#define SOLUTION_H
 
-#include "Result.h"
+#include "Loaded_LIST.h"
+#include <iostream>
+using namespace std;
 #include <fstream>
+#include <string>
+#include <cstring> // use strtok
+#include <string.h>
 
 class Manager
 {
@@ -18,14 +21,21 @@ private:
 
 
 public:
+    const char *filepath;
+    string command, number, title;
+    string firstArg, secondArg;
+    Loaded_LIST *list = new Loaded_LIST;
+    Manager();
     ~Manager();
     void Run(const char* filepath);
-    void PrintError(Result result);
-
-private:
-    Result Load(const char* filepath);
-    Result Print();
+    void LOAD();
+    void ADD();
+    void MODIFY();
+    void MOVE();
+    void PRINT();
+    void SEARCH();
+    void SELECT();
+    void EDIT();
+    void EXIT();
 
 };
-
-#endif
