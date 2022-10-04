@@ -20,8 +20,8 @@ Manager::~Manager()
         ferr.close();
 }
 
-Manager::Manager(){
-
+Manager::Manager()
+{
 }
 
 void Manager::Run(const char *filepath)
@@ -34,12 +34,12 @@ void Manager::Run(const char *filepath)
         while (!inCommand.eof())
         {
             getline(inCommand, command, '\n');
-                int str_length = command.length();
-    char *charCommand = new char[str_length];
-    strcpy(charCommand, command.c_str());
-    char *ptr = strtok(charCommand, " ");
+            int str_length = command.length();
+            char *charCommand = new char[str_length];
+            strcpy(charCommand, command.c_str());
+            char *ptr = strtok(charCommand, " ");
 
-    command = ptr;
+            command = ptr;
 
             if (command == "LOAD")
             {
@@ -49,14 +49,34 @@ void Manager::Run(const char *filepath)
             {
                 ADD();
             }
+            else if (command == "MODIFY")
+            {
+                MODIFY();
+            }
+            else if (command == "MOVE")
+            {
+            }
+            else if (command == "PRINT")
+            {
+            }
+            else if (command == "SEARCH")
+            {
+            }
+            else if (command == "SELECT")
+            {
+            }
+            else if (command == "EDIT")
+            {
+            }
+            else if (command == "EXIT")
+            {
+            }
         }
     }
 }
 
 void Manager::LOAD()
 {
-
-
     ifstream inCSV("img_files/filesnumbers.csv");
     if (!inCSV) // 7p implementation CSV ERROR code
     {
@@ -84,7 +104,7 @@ void Manager::LOAD()
             strcpy(ch2, title.c_str()); // string -> char*
             char *ptr2 = strtok(ch2, "\r\n.RAW");
             title = ptr2; // char* -> string 후 노드에 넣기
-            list->INSERT(command, title, "img_files", number);
+            list->INSERT(command, title, "img_files", number, NULL);
         }
         list->PRINT();
 
@@ -116,9 +136,6 @@ void Manager::ADD()
     }
     else
     {
-        cout << "=======ADD========" << endl;
-        cout << "success" << endl;
-        cout << "===================" << endl;
         while (!newCSV.eof())
         {
             getline(newCSV, number, ','); // string
@@ -138,16 +155,49 @@ void Manager::ADD()
             char *ptr4 = strtok(ch4, ".RAW\r\n");
             title = ptr4; // char* -> string 후 노드에 넣기
             // cout<<title<<" "<<number<<endl;
-            list->INSERT(command, title, "new_files", number);
+            list->INSERT(command, title, "new_files", number, NULL);
         }
         // list->PRINT();
 
+        cout << "=======ADD========" << endl;
+        cout << "success" << endl;
+        cout << "===================" << endl;
         newCSV.close();
     }
 }
 
 void Manager::MODIFY()
 {
+    char *ptr1, *ptr2, *ptr3;
+    char* delimeter="\"";
+    ptr1 = strtok(NULL, "f");
+    ptr2 = strtok(NULL, "");
+    ptr3 = strtok(NULL, "");
+
+    if (ptr1 == NULL || ptr2 == NULL || ptr3 == NULL)
+    {
+        cout << "========ERROR========" << endl;
+        cout << "300" << endl;
+        cout << "====================" << endl;
+        return;
+    }
+    else
+    {
+        folder = ptr1;
+        title = ptr2;
+        number = ptr3;
+        //Loaded_LIST_Node *delNode = list->FIND(folder, title); // 삭제 후 생성해야 하므로 삭제할 노드
+        Loaded_LIST_Node *prevNode = list->returnPrevNode(folder, title); // 삭제할 노드의 이전 노드가 새로 생긴 노드를 가리켜야 하므로 생성
+        
+        prevNode->setNext(NULL);
+
+        list->DELETE(folder, title);
+        list->INSERT(command, title, folder, number, prevNode); // INSERT 안에서 prevNode가 새로 생긴 노드를 가리킴
+
+        cout << "=======MODIFY========" << endl;
+        cout << "SUCCESS" << endl;
+        cout << "=====================" << endl;
+    }
 }
 
 void Manager::MOVE()

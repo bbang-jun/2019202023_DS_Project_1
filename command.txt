@@ -1,2 +1,3 @@
 LOAD
 ADD new_files new_filesnumbers.csv
+MODIFY img_files "A CUP ON THE TABLE" 303

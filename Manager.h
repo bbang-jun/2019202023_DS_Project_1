@@ -22,7 +22,7 @@ private:
 
 public:
     const char *filepath;
-    string command, number, title;
+    string command, number, title, folder;
     string firstArg, secondArg;
     Loaded_LIST *list = new Loaded_LIST;
     Manager();

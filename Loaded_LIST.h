@@ -43,8 +43,6 @@ class Loaded_LIST{
     Loaded_LIST_Node * newHead;
     Loaded_LIST_Node * imgTail;
     Loaded_LIST_Node * newTail;
-    Loaded_LIST_Node * imgPrev;
-    Loaded_LIST_Node * newPrev;
     D2Node *img_files;
     D2Node *new_files;
 
@@ -52,10 +50,10 @@ class Loaded_LIST{
     public:
     int imgCount=0;
     Loaded_LIST();
-    void INSERT(string command, string number, string folder, string title);
-    void DELETE(string folderName, string title, string number); // delete
+    void INSERT(string command, string number, string folder, string title, Loaded_LIST_Node* node);
+    void DELETE(string folderName, string title); // delete
     Loaded_LIST_Node* FIND(string folderName, string title); // 
+    Loaded_LIST_Node* returnPrevNode(string folderName, string title);
     void PRINT();
-    void ADD();
     bool LOADED_LIST_CHECK();
 };

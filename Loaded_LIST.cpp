@@ -25,12 +25,10 @@ Loaded_LIST::Loaded_LIST()
     newHead = NULL;
     imgTail = NULL;
     newTail = NULL;
-    imgPrev = NULL;
-    newPrev = NULL;
     imgCount = 0; // 100개 넘겼는지 판단
 }
 
-void Loaded_LIST::INSERT(string command, string title, string folder, string number)
+void Loaded_LIST::INSERT(string command, string title, string folder, string number, Loaded_LIST_Node* node)
 {
     if (this->imgCount == 100)
     {
@@ -80,11 +78,13 @@ void Loaded_LIST::INSERT(string command, string title, string folder, string num
             this->imgCount++;
         }
     }
+    else if (command =="MODIFY"){
+        node->setNext(newNode);
+    }
 }
 
-void Loaded_LIST::DELETE(string folderName, string title, string number)
+void Loaded_LIST::DELETE(string folderName, string title)
 {
-    Loaded_LIST_Node *delNode;
     Loaded_LIST_Node *curNode;
     Loaded_LIST_Node *prevNode;
 
@@ -94,31 +94,40 @@ void Loaded_LIST::DELETE(string folderName, string title, string number)
     {
         if (curNode == imgHead)
         {
-            delNode = imgHead;
             imgHead = imgHead->getNext();
-            delete delNode;
+            delete curNode;
         }
         else
         {
+            prevNode = imgHead;
             while (prevNode->getNext() != curNode)
                 prevNode = prevNode->getNext();
+            prevNode->setNext(curNode->getNext());
+            delete curNode;
         }
     }
     else if (folderName == "new_files")
     {
         if (curNode == newHead)
         {
-            delNode = newHead;
+            curNode = newHead;
             newHead = newHead->getNext();
-            delete delNode;
+            delete curNode;
+        }
+        else
+        {
+            prevNode = newHead;
+            while (prevNode->getNext() != curNode)
+                prevNode = prevNode->getNext();
+            prevNode->setNext(curNode->getNext());
+            delete curNode;
         }
     }
 }
 
 Loaded_LIST_Node *Loaded_LIST::FIND(string folderName, string title)
 {
-
-    Loaded_LIST_Node *curNode = new Loaded_LIST_Node;
+    Loaded_LIST_Node *curNode;
 
     if (folderName == "img_files")
     {
@@ -142,6 +151,27 @@ Loaded_LIST_Node *Loaded_LIST::FIND(string folderName, string title)
     }
 }
 
+Loaded_LIST_Node *Loaded_LIST::returnPrevNode(string folderName, string title)
+{
+    Loaded_LIST_Node *curNode = FIND(folderName, title);
+    Loaded_LIST_Node *prevNode;
+
+    if (folderName == "img_files")
+    {
+        prevNode = imgHead;
+        while (prevNode->getNext() != curNode)
+            prevNode = prevNode->getNext();
+        return prevNode;
+    }
+    else if (folderName == "new_files")
+    {
+        prevNode = newHead;
+        while (prevNode->getNext() != curNode)
+            prevNode = prevNode->getNext();
+        return prevNode;
+    }
+}
+
 void Loaded_LIST::PRINT()
 {
     Loaded_LIST_Node *curNode = imgHead;
@@ -160,10 +190,6 @@ void Loaded_LIST::PRINT()
     //     cout << curNode->getTitle() << "/" << curNode->getNumber() << endl;
     //     curNode = curNode->getNext();
     // }
-}
-
-void Loaded_LIST::ADD()
-{
 }
 
 bool Loaded_LIST::LOADED_LIST_CHECK()
