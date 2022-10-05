@@ -21,36 +21,29 @@ class Loaded_LIST_Node{
 
 class D2Node{
     private:
-    string title;
-    Loaded_LIST_Node* next;
-    D2Node * D2Next;
-    D2Node * img_files;
-    D2Node * imgToNew;
+    string folder;
+    Loaded_LIST_Node* next; // 헤드 노드를 가리킴(가로)
+    D2Node * D2Next; // 다음 파일 선행 노드를 가리킴(세로)
     
-
     public:
-    void setTitle(string title);
-    string getTitle();
+    Loaded_LIST_Node* nodeHead;
+    Loaded_LIST_Node* nodeTail;
+    void setD2Folder(string folder);
+    string getD2Folder();
     void setNext(Loaded_LIST_Node* next); // 링링 가르키는 용도
     Loaded_LIST_Node* getNext(); // 링링 가져오는 용도
-    void setD2Next(D2Node* New); // img가 new 가리키는 용도
+    void setD2Next(D2Node* New); 
     D2Node* getD2Next();
 };
 
 class Loaded_LIST{
-    private:
-    Loaded_LIST_Node * imgHead;
-    Loaded_LIST_Node * newHead;
-    Loaded_LIST_Node * imgTail;
-    Loaded_LIST_Node * newTail;
-    D2Node *img_files;
-    D2Node *new_files;
-
-
     public:
+    D2Node* folderHead;
+    D2Node* folderTail;
     int imgCount=0;
     Loaded_LIST();
-    void INSERT(string command, string number, string folder, string title, Loaded_LIST_Node* node);
+    void firstINSERT(string folder, D2Node* node);
+    void INSERT(string number, string folder, string title, Loaded_LIST_Node* node);
     void DELETE(string folderName, string title); // delete
     Loaded_LIST_Node* FIND(string folderName, string title); // 
     Loaded_LIST_Node* returnPrevNode(string folderName, string title);
