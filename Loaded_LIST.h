@@ -9,6 +9,7 @@ class Loaded_LIST_Node{
     Loaded_LIST_Node* next;
     
     public:
+    Loaded_LIST_Node();
     void setNumber(string number);
     string getNumber();
     void setFolder(string folder);
@@ -26,11 +27,12 @@ class D2Node{
     D2Node * D2Next; // 다음 파일 선행 노드를 가리킴(세로)
     
     public:
+    D2Node();
     Loaded_LIST_Node* nodeHead;
     Loaded_LIST_Node* nodeTail;
     void setD2Folder(string folder);
     string getD2Folder();
-    void setNext(Loaded_LIST_Node* next); // 링링 가르키는 용도
+    void setfNext(Loaded_LIST_Node* next); // 링링 가르키는 용도
     Loaded_LIST_Node* getNext(); // 링링 가져오는 용도
     void setD2Next(D2Node* New); 
     D2Node* getD2Next();
