@@ -1,2 +1,8 @@
 LOAD
 ADD new_files new_filesnumbers.csv
+MODIFY img_files "there are lots of people in the park" 1111
+MODIFY img_files "the man is gorgeous" 2222
+MODIFY img_files "the woman is smiling" 3333
+MODIFY img_files "fence is near trees" 2323
+MODIFY new_files "Ef" 33333
+EXIT

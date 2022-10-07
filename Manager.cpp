@@ -18,10 +18,12 @@ Manager::~Manager()
 
     if (ferr.is_open())
         ferr.close();
+    delete list;
 }
 
 Manager::Manager()
 {
+    list = new Loaded_LIST;
 }
 
 void Manager::Run(const char *filepath)
@@ -70,6 +72,7 @@ void Manager::Run(const char *filepath)
             }
             else if (command == "EXIT")
             {
+                EXIT();
             }
         }
     }
@@ -82,7 +85,7 @@ void Manager::LOAD()
     {
         cout << "========ERROR========" << endl;
         cout << "100" << endl;
-        cout << "====================" << endl;
+        cout << "====================" << endl<<endl;
     }
     else
     {
@@ -105,12 +108,12 @@ void Manager::LOAD()
             strcpy(ch2, title.c_str()); // string -> char*
             char *ptr2 = strtok(ch2, "\r\n.RAW");
             title = ptr2; // char* -> string 후 노드에 넣기
-            list->INSERT(number, "img_files", title, NULL);
+            list->INSERT(command, number, "img_files", title, NULL);
         }
         //list->PRINT();
 
         inCSV.close();
-        cout << "===================" << endl;
+        cout << "===================" << endl << endl;
     }
 }
 
@@ -122,8 +125,8 @@ void Manager::ADD()
     path.append("/");
     path.append(ptr2);
     folder=ptr1;
-//  || list->LOADED_LIST_CHECK()
-    if (ptr1 == NULL || ptr2 == NULL)
+
+    if (ptr1 == NULL || ptr2 == NULL || list->LOADED_LIST_CHECK())
     {
         cout << "========ERROR========" << endl;
         cout << "200" << endl;
@@ -161,48 +164,44 @@ void Manager::ADD()
             char *ptr4 = strtok(ch4, ".RAW\r\n");
             title = ptr4; // char* -> string 후 노드에 넣기
             // cout<<title<<" "<<number<<endl;
-            list->INSERT(number, folder, title, NULL);
+            list->INSERT(command, number, folder, title, NULL);
         }
-        list->PRINT();
 
         cout << "success" << endl;
-        cout << "===================" << endl;
+        cout << "===================" << endl << endl;
         newCSV.close();
     }
 }
 
 void Manager::MODIFY()
 {
-//     char *ptr1, *ptr2, *ptr3;
-//     char* delimeter="\"";
-//     ptr1 = strtok(NULL, "f");
-//     ptr2 = strtok(NULL, "");
-//     ptr3 = strtok(NULL, "");
+    char *tokFolder, *tokTitle, *tokNumber, *temp;
+    string temp2;
+    tokFolder = strtok(NULL, " "); 
+    temp = strtok(NULL, "");
+    title=temp;
+    title.erase(find(title.begin(), title.end(), '"'));
+    strcpy(temp, title.c_str());
+    tokTitle = strtok(temp, "\"");
+    tokNumber = strtok(NULL, " ");
 
-//     if (ptr1 == NULL || ptr2 == NULL || ptr3 == NULL)
-//     {
-//         cout << "========ERROR========" << endl;
-//         cout << "300" << endl;
-//         cout << "====================" << endl;
-//         return;
-//     }
-//     else
-//     {
-//         folder = ptr1;
-//         title = ptr2;
-//         number = ptr3;
-//         //Loaded_LIST_Node *delNode = list->FIND(folder, title); // 삭제 후 생성해야 하므로 삭제할 노드
-//         Loaded_LIST_Node *prevNode = list->returnPrevNode(folder, title); // 삭제할 노드의 이전 노드가 새로 생긴 노드를 가리켜야 하므로 생성
-        
-//         prevNode->setNext(NULL);
-
-//         list->DELETE(folder, title);
-//         list->INSERT(command, title, folder, number, prevNode); // INSERT 안에서 prevNode가 새로 생긴 노드를 가리킴
-
-//         cout << "=======MODIFY========" << endl;
-//         cout << "SUCCESS" << endl;
-//         cout << "=====================" << endl;
-//     }
+    if (tokFolder == NULL || tokTitle == NULL || tokNumber == NULL || list->Unique_Number_CHECK(tokNumber))
+    {
+        cout << "========ERROR========" << endl;
+        cout << "300" << endl;
+        cout << "====================" << endl << endl;
+        return;
+    }
+    else
+        {
+        Loaded_LIST_Node *prevNode = list->returnPrevNode(tokFolder, tokTitle); // 삭제할 노드의 이전 노드가 새로 생긴 노드를 가리켜야 하므로 생성
+        list->DELETE(tokFolder, tokTitle, prevNode);
+        list->INSERT(command, tokNumber, tokFolder, tokTitle, prevNode); // INSERT 안에서 prevNode가 새로 생긴 노드를 가리킴
+        list->PRINT();
+        cout << "=======MODIFY========" << endl;
+        cout << "SUCCESS" << endl;
+        cout << "=====================" << endl << endl;
+     }
 }
 
 void Manager::MOVE()
@@ -227,4 +226,7 @@ void Manager::EDIT()
 
 void Manager::EXIT()
 {
+    cout<<"=======EXIT========"<<endl;
+    cout<<"SUCCESS"<<endl;
+    cout<<"==================="<<endl << endl;
 }

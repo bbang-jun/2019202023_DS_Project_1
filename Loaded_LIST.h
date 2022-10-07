@@ -32,7 +32,7 @@ class D2Node{
     Loaded_LIST_Node* nodeTail;
     void setD2Folder(string folder);
     string getD2Folder();
-    void setfNext(Loaded_LIST_Node* next); // 링링 가르키는 용도
+    void setNext(Loaded_LIST_Node* next); // 링링 가르키는 용도
     Loaded_LIST_Node* getNext(); // 링링 가져오는 용도
     void setD2Next(D2Node* New); 
     D2Node* getD2Next();
@@ -45,10 +45,12 @@ class Loaded_LIST{
     int imgCount=0;
     Loaded_LIST();
     void firstINSERT(string folder, D2Node* node);
-    void INSERT(string number, string folder, string title, Loaded_LIST_Node* node);
-    void DELETE(string folderName, string title); // delete
+    void INSERT(string command, string number, string folder, string title, Loaded_LIST_Node* node);
+    void DELETE(string folderName, string title, Loaded_LIST_Node* node); // delete
     Loaded_LIST_Node* FIND(string folderName, string title); // 
     Loaded_LIST_Node* returnPrevNode(string folderName, string title);
     void PRINT();
     bool LOADED_LIST_CHECK();
+    bool Unique_Number_CHECK(string number);
+    bool EXIST(string folder, string title);
 };

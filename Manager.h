@@ -7,6 +7,7 @@ using namespace std;
 #include <string>
 #include <cstring> // use strtok
 #include <string.h>
+#include <algorithm>
 
 class Manager
 {
@@ -24,7 +25,7 @@ public:
     const char *filepath;
     string command, number, title, folder;
     string firstArg, secondArg;
-    Loaded_LIST *list = new Loaded_LIST;
+    Loaded_LIST *list;
     Manager();
     ~Manager();
     void Run(const char* filepath);

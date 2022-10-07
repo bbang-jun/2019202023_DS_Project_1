@@ -2,8 +2,10 @@
 
 int main()
 {
-    Manager m;
-    m.Run("command.txt");
+    Manager *m = new Manager;
+    m->Run("command.txt");
+
+    delete m;
 
     return 0;
 }
