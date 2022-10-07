@@ -19,7 +19,7 @@ Loaded_LIST_Node *D2Node::getNext() { return this->next; }
 void D2Node::setD2Folder(string folder) { this->folder = folder; }
 string D2Node::getD2Folder() { return this->folder; }
 D2Node::D2Node(){next=NULL; D2Next=NULL;}
-
+ 
 Loaded_LIST::Loaded_LIST()
 {
     imgCount = 0; // 100개 넘겼는지 판단
