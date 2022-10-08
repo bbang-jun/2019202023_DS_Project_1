@@ -142,25 +142,6 @@ void Loaded_LIST::DELETE(string folder, string title, Loaded_LIST_Node *node)
         prevNode->setNext(delNode->getNext());
         delete delNode;
     }
-
-    // if (curD2Node->nodeHead == curNode){
-
-    // }
-
-    // if (curD2Node->nodeHead == curNode)
-    // {
-    //     curD2Node->nodeHead = curNode->getNext();
-    //     delete curNode; // 삭제할 노드 삭제
-    // }
-    // else
-    // {
-    //     if (curD2Node->nodeTail == curNode)
-    //     {
-    //         curD2Node->nodeTail = prevNode;
-    //     }
-    //     node->setNext(curNode->getNext()); // 삭제할 노드의 이전 노드가 삭제할 노드의 다음 노드를 가리키게 함
-    //     delete curNode;
-    // }
 }
 
 Loaded_LIST_Node *Loaded_LIST::FIND(string folder, string title)
@@ -186,7 +167,6 @@ bool Loaded_LIST::EXIST(string folder, string title)
         if (curD2Node->getD2Folder() == folder)
         {
             Loaded_LIST_Node * findNode=curD2Node->getNext();
-            cout<<findNode->getFolder()<<endl;
             while (findNode!=NULL)
             {
                 if (findNode->getFolder() == folder && findNode->getTitle() == title)

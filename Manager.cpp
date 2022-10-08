@@ -1,4 +1,5 @@
 #include "Manager.h"
+#include <algorithm>
 
 void Run(const char *filepath);
 void LOAD(const char *filepath);
@@ -57,6 +58,7 @@ void Manager::Run(const char *filepath)
             }
             else if (command == "MOVE")
             {
+                MOVE();
             }
             else if (command == "PRINT")
             {
@@ -85,10 +87,12 @@ void Manager::LOAD()
     {
         cout << "========ERROR========" << endl;
         cout << "100" << endl;
-        cout << "====================" << endl<<endl;
+        cout << "====================" << endl
+             << endl;
     }
     else
     {
+        bool first = true;
         cout << "=======LOAD========" << endl;
         list->firstINSERT("img_files", NULL);
         while (!inCSV.eof())
@@ -100,7 +104,19 @@ void Manager::LOAD()
             char *ptr1 = strtok(ch1, ",\n ");
             if (ptr1 == NULL)
                 continue;
+
             number = ptr1; // char* -> string 후 노드에 넣기
+
+            if (first == true)
+            {
+                number.erase(find(number.begin(), number.end(), '\xef'));
+                number.erase(find(number.begin(), number.end(), '\xbb'));
+                number.erase(find(number.begin(), number.end(), '\xbf'));
+
+                first = false;
+            }
+
+            cout << number << endl;
 
             getline(inCSV, title, '\n'); // string
             int str_length2 = title.length();
@@ -110,21 +126,22 @@ void Manager::LOAD()
             title = ptr2; // char* -> string 후 노드에 넣기
             list->INSERT(command, number, "img_files", title, NULL);
         }
-        //list->PRINT();
+        // list->PRINT();
 
         inCSV.close();
-        cout << "===================" << endl << endl;
+        cout << "===================" << endl
+             << endl;
     }
 }
 
 void Manager::ADD()
 {
     char *ptr1 = strtok(NULL, " "); // folder
-    char* ptr2 = strtok(NULL, " "); // filename 
+    char *ptr2 = strtok(NULL, " "); // filename
     string path(ptr1);
     path.append("/");
     path.append(ptr2);
-    folder=ptr1;
+    folder = ptr1;
 
     if (ptr1 == NULL || ptr2 == NULL || list->LOADED_LIST_CHECK())
     {
@@ -143,6 +160,7 @@ void Manager::ADD()
     }
     else
     {
+        bool first = true;
         list->firstINSERT(ptr1, NULL);
         cout << "=======ADD========" << endl;
         while (!newCSV.eof())
@@ -157,6 +175,15 @@ void Manager::ADD()
                 continue;
             number = ptr3; // char* -> string 후 노드에 넣기
 
+            if (first == true)
+            {
+                number.erase(find(number.begin(), number.end(), '\xef'));
+                number.erase(find(number.begin(), number.end(), '\xbb'));
+                number.erase(find(number.begin(), number.end(), '\xbf'));
+
+                first = false;
+            }
+
             getline(newCSV, title, '\n'); // string
             int str_length2 = title.length();
             char *ch4 = new char[str_length2];
@@ -168,7 +195,8 @@ void Manager::ADD()
         }
 
         cout << "success" << endl;
-        cout << "===================" << endl << endl;
+        cout << "===================" << endl
+             << endl;
         newCSV.close();
     }
 }
@@ -177,9 +205,9 @@ void Manager::MODIFY()
 {
     char *tokFolder, *tokTitle, *tokNumber, *temp;
     string temp2;
-    tokFolder = strtok(NULL, " "); 
+    tokFolder = strtok(NULL, " ");
     temp = strtok(NULL, "");
-    title=temp;
+    title = temp;
     title.erase(find(title.begin(), title.end(), '"'));
     strcpy(temp, title.c_str());
     tokTitle = strtok(temp, "\"");
@@ -189,19 +217,20 @@ void Manager::MODIFY()
     {
         cout << "========ERROR========" << endl;
         cout << "300" << endl;
-        cout << "====================" << endl << endl;
+        cout << "====================" << endl
+             << endl;
         return;
     }
     else
-        {
+    {
         Loaded_LIST_Node *prevNode = list->returnPrevNode(tokFolder, tokTitle); // 삭제할 노드의 이전 노드가 새로 생긴 노드를 가리켜야 하므로 생성
         list->DELETE(tokFolder, tokTitle, prevNode);
         list->INSERT(command, tokNumber, tokFolder, tokTitle, prevNode); // INSERT 안에서 prevNode가 새로 생긴 노드를 가리킴
-        list->PRINT();
         cout << "=======MODIFY========" << endl;
         cout << "SUCCESS" << endl;
-        cout << "=====================" << endl << endl;
-     }
+        cout << "=====================" << endl
+             << endl;
+    }
 }
 
 void Manager::MOVE()
@@ -226,7 +255,8 @@ void Manager::EDIT()
 
 void Manager::EXIT()
 {
-    cout<<"=======EXIT========"<<endl;
-    cout<<"SUCCESS"<<endl;
-    cout<<"==================="<<endl << endl;
+    cout << "=======EXIT========" << endl;
+    cout << "SUCCESS" << endl;
+    cout << "===================" << endl
+         << endl;
 }
