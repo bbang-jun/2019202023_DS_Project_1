@@ -149,7 +149,6 @@ public:
     void INSERT(string command, int number, string folder, string title, Database_BST_Node *curNode);
     void DELETES(int number);
     void IN_ORDER(Database_BST_Node *curNode);
-    void POST_ORDER();
     Database_BST_Node *PRE_ORDER_SELECT(Database_BST_Node *curNode, int numberBST);
     void PRINT();
     void POST_DELETE(Database_BST_Node *curNode); // 후위순회 순으로 동적할당 해제하는 함수

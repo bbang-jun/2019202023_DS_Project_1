@@ -52,7 +52,7 @@ void Database_BST::INSERT(string command, int number, string folder, string titl
         newNode->setLeftChild(NULL);  // newNode의 왼쪽 자식 NULL 초기화
         newNode->setRightChild(NULL); // newNode의 오른쪽 자식 NULL 초기화
         root = newNode;               // root 노드와 현재 노드를 newNode로 초기화
-        curNode = root;
+        //curNode = root;
     }
     else if (curNode->getNumber() > number)
     { // 현재 노드에 저장된 값이 입력 받은 값보다 큰 경우(입력 받은 값이 작으므로 왼쪽에 삽입)
@@ -228,13 +228,18 @@ void Database_BST::IN_ORDER(Database_BST_Node *curNode)
     }
 }
 
-Database_BST_Node* Database_BST::PRE_ORDER_SELECT(Database_BST_Node * curNode, int numberBST){
+
+
+
+Database_BST_Node* Database_BST::PRE_ORDER_SELECT(Database_BST_Node * curNode, int selectNum){
 
     if (curNode != NULL) {
-        if(curNode->getNumber()==numberBST)
+        if(curNode->getNumber()==selectNum)
             return curNode;
-        //PRE_ORDER_SELECT(curNode->getLeftChild());
-       // PRE_ORDER_SELECT(curNode->getRightChild());
+        else if(curNode->getNumber()>selectNum)
+            PRE_ORDER_SELECT(curNode->getLeftChild(), selectNum);
+        else if(curNode->getNumber()<selectNum)
+            PRE_ORDER_SELECT(curNode->getRightChild(), selectNum);
     }
 }
 
@@ -327,10 +332,6 @@ void Database_BST::BoyerMoore(Queue* q, string txt, string pat){
             cout<<"\""<<q->getFront()->getTitle()<<"\""<<" / "<<q->getFront()->getNumber()<<endl;
 
              return;
-            //cout << "pattern occurs at shift = " <<  s << endl;  
-
-            
-            //s += (s + m < n)? m-badchar[txt[s + m]] : 1;  
   
         }
         else
@@ -341,12 +342,9 @@ void Database_BST::BoyerMoore(Queue* q, string txt, string pat){
 void Database_BST::badChar(string str, int size, int badchar[NO_OF_CHARS]){
     int i;  
   
-    // Initialize all occurrences as -1  
     for (i = 0; i < NO_OF_CHARS; i++)  
         badchar[i] = -1;  
   
-    // Fill the actual value of last occurrence  
-    // of a character  
     for (i = 0; i < size; i++)  
         badchar[(int) str[i]] = i;  
 }

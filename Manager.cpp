@@ -315,16 +315,29 @@ void Manager::SEARCH()
         if(q->isEmpty()==false)
             break;
     }
+    cout<<"==========================="<<endl<<endl;
 }
 
 void Manager::SELECT()
 {
     char *tokNumber;
     tokNumber = strtok(NULL, " ");
+    if (tokNumber == NULL)
+    {
+        cout << "========ERROR========" << endl;
+        cout << "700" << endl;
+        cout << "====================" << endl;
+        return;
+    }
     number = tokNumber;
-    int numberBST=stoi(number);
-    Database_BST_Node*selectNode = tree->PRE_ORDER_SELECT(tree->getRoot(), numberBST);
-
+    int selectNum=stoi(number);
+    Database_BST_Node*selectNode = tree->PRE_ORDER_SELECT(tree->getRoot(), selectNum);
+    string path;
+    path.append(selectNode->getFolder());
+    path.append("/");
+    path.append(selectNode->getTitle());
+    path.append(".RAW");
+    cout<<path<<endl;
 }
 
 void Manager::EDIT()

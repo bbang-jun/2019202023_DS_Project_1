@@ -3,4 +3,5 @@ ADD new_files new_filesnumbers.csv
 MOVE
 PRINT
 SEARCH "the"
+SELECT 500
 EXIT
