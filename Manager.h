@@ -2,7 +2,6 @@
 
 #include "Loaded_LIST.h"
 #include "Database_BST.h"
-#include "Stack.h"
 #include <iostream>
 using namespace std;
 #include <fstream>
@@ -29,6 +28,7 @@ public:
     string firstArg, secondArg;
     Loaded_LIST *list;
     Database_BST* tree;
+    Queue* q;
     Manager();
     ~Manager();
     void Run(const char* filepath);

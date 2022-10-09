@@ -1,7 +1,6 @@
 LOAD
 ADD new_files new_filesnumbers.csv
-MODIFY img_files "The house has windows and doors" 4444
-MODIFY img_files "there are lots of people in the park" 101
-MODIFY img_files "fence is near trees" 998
 MOVE
+PRINT
+SEARCH "the"
 EXIT

@@ -26,6 +26,7 @@ Manager::Manager()
 {
     list = new Loaded_LIST;
     tree = new Database_BST;
+    q = new Queue;
 }
 
 void Manager::Run(const char *filepath)
@@ -253,14 +254,14 @@ void Manager::MOVE()
             numberBST = stoi(curNode->getNumber());
             tree->INSERT(command, numberBST, curNode->getFolder(), curNode->getTitle(), tree->getRoot());
 
-            list->DELETE(curNode->getFolder(), curNode->getTitle(), prevNode);
+            //list->DELETE(curNode->getFolder(), curNode->getTitle(), prevNode);
             curNode = prevNode;
         }
         if (curNode == curD2Node->getNext())
         {
             numberBST = stoi(curNode->getNumber());
             tree->INSERT(command, numberBST, curNode->getFolder(), curNode->getTitle(), tree->getRoot());
-            list->DELETE(curNode->getFolder(), curNode->getTitle(), prevNode);
+            //list->DELETE(curNode->getFolder(), curNode->getTitle(), prevNode);
         }
         curD2Node = prevD2Node;
     }
@@ -273,14 +274,14 @@ void Manager::MOVE()
             numberBST = stoi(curNode->getNumber());
             tree->INSERT(command, numberBST, curNode->getFolder(), curNode->getTitle(), tree->getRoot());
 
-            list->DELETE(curNode->getFolder(), curNode->getTitle(), prevNode);
+            //list->DELETE(curNode->getFolder(), curNode->getTitle(), prevNode);
             curNode = prevNode;
         }
         if (curNode == curD2Node->getNext())
         {
             numberBST = stoi(curNode->getNumber());
             tree->INSERT(command, numberBST, curNode->getFolder(), curNode->getTitle(), tree->getRoot());
-            list->DELETE(curNode->getFolder(), curNode->getTitle(), prevNode);
+            //list->DELETE(curNode->getFolder(), curNode->getTitle(), prevNode);
         }
     }
 }
@@ -300,7 +301,20 @@ void Manager::PRINT()
 
 void Manager::SEARCH()
 {
-    tree->Iterative_POST_ORDER(tree->getRoot());
+    string word;
+    char *tokWord = strtok(NULL, " ");
+    word = tokWord;
+    word.erase(find(word.begin(), word.end(), '"'));
+    word.erase(find(word.begin(), word.end(), '"'));
+    cout<<"=======SEARCH==============="<<endl;
+    tree->Iterative_POST_ORDER(q);
+
+    while(1){
+        tree->BoyerMoore(q, q->getFront()->getTitle(), word);
+        q->pop();
+        if(q->isEmpty()==false)
+            break;
+    }
 }
 
 void Manager::SELECT()

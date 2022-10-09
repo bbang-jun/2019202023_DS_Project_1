@@ -1,9 +1,9 @@
 #include "Database_BST.h"
-#include <iostream>
-using namespace std;
+
 
 Database_BST_Node::Database_BST_Node() // consturctor of Database_BST_Node
 {
+    checkSum=0;
     number = 0;
     leftChild = NULL;
     rightChild = NULL;
@@ -259,6 +259,94 @@ void Database_BST::POST_DELETE(Database_BST_Node *curNode)
     }
 }
 
-void Database_BST::Iterative_POST_ORDER(Database_BST_Node* root){
+void Database_BST::Iterative_POST_ORDER(Queue* q){
 
+    Database_BST_Node* currentNode = root;
+    stack<Database_BST_Node*>s;
+    while(true){
+        if(currentNode==NULL)
+        return;
+        if(currentNode->checkSum==0)
+        s.push(currentNode);
+        else if(currentNode->checkSum==1){
+            while(currentNode->checkSum==1){
+                s.pop();
+                if(s.empty()){
+                    return;
+                }
+                currentNode = s.top();
+            }
+                
+            if(s.empty())
+            return;
+            currentNode = s.top();
+        }
+        else
+        return;
+
+        if(currentNode->getLeftChild()!=NULL && currentNode->getLeftChild()->checkSum==0){
+            currentNode=currentNode->getLeftChild();
+            continue;
+        }
+        if(currentNode->getRightChild()!=NULL && currentNode->getRightChild()->checkSum==0){
+            currentNode=currentNode->getRightChild();
+            continue;
+        }
+        q->push(currentNode->getNumber(), currentNode->getTitle());
+        currentNode->checkSum=1;
+        s.pop();
+        if(s.empty()){
+            return;
+        } 
+        else{
+            currentNode=s.top();
+        } 
+    }
+}
+
+void Database_BST::BoyerMoore(Queue* q, string txt, string pat){
+
+    int m = pat.size();  
+    int n = txt.size();  
+  
+    int badchar[NO_OF_CHARS];  
+  
+    badChar(pat, m, badchar);  
+  
+    int s = 0; 
+    while(s <= (n - m))  
+    {  
+        int j = m - 1;  
+  
+        while(j >= 0 && pat[j] == txt[s + j])  
+            j--;  
+  
+
+        if (j < 0)  
+        {  
+            cout<<"\""<<q->getFront()->getTitle()<<"\""<<" / "<<q->getFront()->getNumber()<<endl;
+
+             return;
+            //cout << "pattern occurs at shift = " <<  s << endl;  
+
+            
+            //s += (s + m < n)? m-badchar[txt[s + m]] : 1;  
+  
+        }
+        else
+            s += max(1, j - badchar[txt[s + j]]);  
+    }  
+}
+
+void Database_BST::badChar(string str, int size, int badchar[NO_OF_CHARS]){
+    int i;  
+  
+    // Initialize all occurrences as -1  
+    for (i = 0; i < NO_OF_CHARS; i++)  
+        badchar[i] = -1;  
+  
+    // Fill the actual value of last occurrence  
+    // of a character  
+    for (i = 0; i < size; i++)  
+        badchar[(int) str[i]] = i;  
 }
