@@ -76,8 +76,8 @@ void Loaded_LIST::INSERT(string command, string number, string folder, string ti
         curD2Node = curD2Node->getD2Next();
 
     if (command == "MODIFY")
-    { // node = prevNode
-        if (EXIST(node->getFolder(), node->getTitle())==true) // modify head node
+    {                                                           // node = prevNode EXIST(node->getFolder(), node->getTitle()) == true
+        if (node==NULL) // modify head node
         {
             Loaded_LIST_Node *tempNode = curD2Node->nodeHead;
             curD2Node->setNext(newNode);
@@ -85,16 +85,17 @@ void Loaded_LIST::INSERT(string command, string number, string folder, string ti
             curD2Node->nodeHead->setNext(tempNode);
             return;
         }
-        if(node==curD2Node->nodeTail){ // modify tail node
+        if (node == curD2Node->nodeTail)
+        { // modify tail node
             curD2Node->nodeTail->setNext(newNode);
-            curD2Node->nodeTail=curD2Node->nodeTail->getNext();
+            curD2Node->nodeTail = curD2Node->nodeTail->getNext();
             return;
         }
 
         // modify middle node
-        Loaded_LIST_Node *tempNode = node->getNext(); 
-        node->setNext(newNode);                       
-        node->getNext()->setNext(tempNode);           
+        Loaded_LIST_Node *tempNode = node->getNext();
+        node->setNext(newNode);
+        node->getNext()->setNext(tempNode);
 
         return;
     }
@@ -140,7 +141,8 @@ void Loaded_LIST::DELETE(string folder, string title, Loaded_LIST_Node *node)
     else
     { // head와 tail제외 중간 삭제
         prevNode->setNext(delNode->getNext());
-        delete delNode;
+
+        free(delNode);
     }
 }
 
@@ -162,12 +164,12 @@ Loaded_LIST_Node *Loaded_LIST::FIND(string folder, string title)
 bool Loaded_LIST::EXIST(string folder, string title)
 {
     D2Node *curD2Node = folderHead;
-    while (curD2Node!=NULL)
+    while (curD2Node != NULL)
     {
         if (curD2Node->getD2Folder() == folder)
         {
-            Loaded_LIST_Node * findNode=curD2Node->getNext();
-            while (findNode!=NULL)
+            Loaded_LIST_Node *findNode = curD2Node->getNext();
+            while (findNode != NULL)
             {
                 if (findNode->getFolder() == folder && findNode->getTitle() == title)
                 {
@@ -193,7 +195,7 @@ Loaded_LIST_Node *Loaded_LIST::returnPrevNode(string folder, string title)
     }
 
     if (curNode == curD2Node->getNext())
-        return curNode;
+        return NULL;
 
     Loaded_LIST_Node *prevNode = curD2Node->nodeHead;
 
@@ -205,8 +207,28 @@ Loaded_LIST_Node *Loaded_LIST::returnPrevNode(string folder, string title)
     return prevNode;
 }
 
+D2Node *Loaded_LIST::returnPrevD2Node(string folder)
+{
+    D2Node *curD2Node = folderHead;
+
+    if (curD2Node->getD2Folder() == folder)
+        return NULL;
+    else
+    {
+        while (curD2Node->getD2Next()->getD2Folder() != folder)
+        {
+            curD2Node = curD2Node->getD2Next();
+        }
+        return curD2Node;
+    }
+}
+
 void Loaded_LIST::PRINT()
 {
+    if (folderHead == NULL)
+    {
+        return;
+    }
     D2Node *curD2Node = folderHead;
     Loaded_LIST_Node *curNode = folderHead->nodeTail;
 

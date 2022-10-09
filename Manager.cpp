@@ -25,6 +25,7 @@ Manager::~Manager()
 Manager::Manager()
 {
     list = new Loaded_LIST;
+    tree = new Database_BST;
 }
 
 void Manager::Run(const char *filepath)
@@ -62,15 +63,19 @@ void Manager::Run(const char *filepath)
             }
             else if (command == "PRINT")
             {
+                PRINT();
             }
             else if (command == "SEARCH")
             {
+                SEARCH();
             }
             else if (command == "SELECT")
             {
+                SELECT();
             }
             else if (command == "EDIT")
             {
+                EDIT();
             }
             else if (command == "EXIT")
             {
@@ -115,8 +120,6 @@ void Manager::LOAD()
 
                 first = false;
             }
-
-            cout << number << endl;
 
             getline(inCSV, title, '\n'); // string
             int str_length2 = title.length();
@@ -190,7 +193,6 @@ void Manager::ADD()
             strcpy(ch4, title.c_str()); // string -> char*
             char *ptr4 = strtok(ch4, ".RAW\r\n");
             title = ptr4; // char* -> string 후 노드에 넣기
-            // cout<<title<<" "<<number<<endl;
             list->INSERT(command, number, folder, title, NULL);
         }
 
@@ -204,7 +206,6 @@ void Manager::ADD()
 void Manager::MODIFY()
 {
     char *tokFolder, *tokTitle, *tokNumber, *temp;
-    string temp2;
     tokFolder = strtok(NULL, " ");
     temp = strtok(NULL, "");
     title = temp;
@@ -231,22 +232,85 @@ void Manager::MODIFY()
         cout << "=====================" << endl
              << endl;
     }
+    //list->PRINT();
 }
 
 void Manager::MOVE()
 {
+    D2Node *prevD2Node = list->folderHead;
+    D2Node *curD2Node = list->folderTail;
+    Loaded_LIST_Node *curNode;
+    Loaded_LIST_Node *prevNode;
+    int numberBST = 0;
+
+    while (curD2Node != list->folderHead)
+    {
+        prevD2Node = list->returnPrevD2Node(curD2Node->getD2Folder());
+        curNode = curD2Node->nodeTail;
+        while (curNode != curD2Node->getNext())
+        {
+            prevNode = list->returnPrevNode(curNode->getFolder(), curNode->getTitle());
+            numberBST = stoi(curNode->getNumber());
+            tree->INSERT(command, numberBST, curNode->getFolder(), curNode->getTitle(), tree->getRoot());
+
+            list->DELETE(curNode->getFolder(), curNode->getTitle(), prevNode);
+            curNode = prevNode;
+        }
+        if (curNode == curD2Node->getNext())
+        {
+            numberBST = stoi(curNode->getNumber());
+            tree->INSERT(command, numberBST, curNode->getFolder(), curNode->getTitle(), tree->getRoot());
+            list->DELETE(curNode->getFolder(), curNode->getTitle(), prevNode);
+        }
+        curD2Node = prevD2Node;
+    }
+    if (curD2Node == list->folderHead)
+    {
+        curNode=curD2Node->nodeTail;
+        while (curNode != curD2Node->getNext())
+        {
+            prevNode = list->returnPrevNode(curNode->getFolder(), curNode->getTitle());
+            numberBST = stoi(curNode->getNumber());
+            tree->INSERT(command, numberBST, curNode->getFolder(), curNode->getTitle(), tree->getRoot());
+
+            list->DELETE(curNode->getFolder(), curNode->getTitle(), prevNode);
+            curNode = prevNode;
+        }
+        if (curNode == curD2Node->getNext())
+        {
+            numberBST = stoi(curNode->getNumber());
+            tree->INSERT(command, numberBST, curNode->getFolder(), curNode->getTitle(), tree->getRoot());
+            list->DELETE(curNode->getFolder(), curNode->getTitle(), prevNode);
+        }
+    }
 }
 
 void Manager::PRINT()
 {
+    cout<<"=======PRINT================"<<endl;
+    tree->PRINT();
+    cout<<"============================"<<endl;
+    //list->PRINT();
+    if(tree->getRoot()==NULL){
+        cout<<"========ERROR========"<<endl;
+        cout<<"500"<<endl;
+        cout<<"===================="<<endl;
+    }
 }
 
 void Manager::SEARCH()
 {
+    tree->Iterative_POST_ORDER(tree->getRoot());
 }
 
 void Manager::SELECT()
 {
+    char *tokNumber;
+    tokNumber = strtok(NULL, " ");
+    number = tokNumber;
+    int numberBST=stoi(number);
+    Database_BST_Node*selectNode = tree->PRE_ORDER_SELECT(tree->getRoot(), numberBST);
+
 }
 
 void Manager::EDIT()

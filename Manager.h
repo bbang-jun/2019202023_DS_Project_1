@@ -1,6 +1,8 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include "Loaded_LIST.h"
+#include "Database_BST.h"
+#include "Stack.h"
 #include <iostream>
 using namespace std;
 #include <fstream>
@@ -26,6 +28,7 @@ public:
     string command, number, title, folder;
     string firstArg, secondArg;
     Loaded_LIST *list;
+    Database_BST* tree;
     Manager();
     ~Manager();
     void Run(const char* filepath);

@@ -10,6 +10,7 @@ class Loaded_LIST_Node{
     
     public:
     Loaded_LIST_Node();
+    ~Loaded_LIST_Node(){}
     void setNumber(string number);
     string getNumber();
     void setFolder(string folder);
@@ -44,11 +45,13 @@ class Loaded_LIST{
     D2Node* folderTail;
     int imgCount=0;
     Loaded_LIST();
+    ~Loaded_LIST(){}
     void firstINSERT(string folder, D2Node* node);
     void INSERT(string command, string number, string folder, string title, Loaded_LIST_Node* node);
     void DELETE(string folderName, string title, Loaded_LIST_Node* node); // delete
     Loaded_LIST_Node* FIND(string folderName, string title); // 
     Loaded_LIST_Node* returnPrevNode(string folderName, string title);
+    D2Node * returnPrevD2Node(string folder);
     void PRINT();
     bool LOADED_LIST_CHECK();
     bool Unique_Number_CHECK(string number);
