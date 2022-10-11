@@ -307,7 +307,7 @@ void Manager::SEARCH()
     word.erase(find(word.begin(), word.end(), '"'));
     word.erase(find(word.begin(), word.end(), '"'));
     cout<<"=======SEARCH==============="<<endl;
-    tree->Iterative_POST_ORDER(q);
+    tree->Iterative_POST_ORDER(q, tree->getRoot());
 
     while(1){
         tree->BoyerMoore(q, q->getFront()->getTitle(), word);

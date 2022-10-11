@@ -1,9 +1,8 @@
 #include "Database_BST.h"
 
-
 Database_BST_Node::Database_BST_Node() // consturctor of Database_BST_Node
 {
-    checkSum=0;
+    isInsert = false;
     number = 0;
     leftChild = NULL;
     rightChild = NULL;
@@ -35,7 +34,7 @@ Database_BST::Database_BST()
 }
 
 Database_BST::~Database_BST()
-{               // destructor of Database_BST
+{                      // destructor of Database_BST
     POST_DELETE(root); // 후위순회 순으로 동적할당 해제하는 함수
 }
 
@@ -46,22 +45,22 @@ void Database_BST::INSERT(string command, int number, string folder, string titl
     if (root == NULL)
     { // 루트 노드가 없는 경우
         Database_BST_Node *newNode = new Database_BST_Node;
-        newNode->setNumber(number);   // newNode의 value는 intger
+        newNode->setNumber(number); // newNode의 value는 intger
         newNode->setFolder(folder);
         newNode->setTitle(title);
         newNode->setLeftChild(NULL);  // newNode의 왼쪽 자식 NULL 초기화
         newNode->setRightChild(NULL); // newNode의 오른쪽 자식 NULL 초기화
         root = newNode;               // root 노드와 현재 노드를 newNode로 초기화
-        //curNode = root;
+        // curNode = root;
     }
     else if (curNode->getNumber() > number)
     { // 현재 노드에 저장된 값이 입력 받은 값보다 큰 경우(입력 받은 값이 작으므로 왼쪽에 삽입)
         if (curNode->getLeftChild() == NULL)
         {
             Database_BST_Node *newNode = new Database_BST_Node;
-        newNode->setNumber(number);   // newNode의 value는 intger
-        newNode->setFolder(folder);
-        newNode->setTitle(title);
+            newNode->setNumber(number); // newNode의 value는 intger
+            newNode->setFolder(folder);
+            newNode->setTitle(title);
             newNode->setLeftChild(NULL);
             newNode->setRightChild(NULL);
             curNode->setLeftChild(newNode);
@@ -78,9 +77,9 @@ void Database_BST::INSERT(string command, int number, string folder, string titl
         if (curNode->getRightChild() == NULL)
         {
             Database_BST_Node *newNode = new Database_BST_Node;
-        newNode->setNumber(number);   // newNode의 value는 intger
-        newNode->setFolder(folder);
-        newNode->setTitle(title);
+            newNode->setNumber(number); // newNode의 value는 intger
+            newNode->setFolder(folder);
+            newNode->setTitle(title);
             newNode->setLeftChild(NULL);
             newNode->setRightChild(NULL);
             curNode->setRightChild(newNode);
@@ -228,17 +227,16 @@ void Database_BST::IN_ORDER(Database_BST_Node *curNode)
     }
 }
 
+Database_BST_Node *Database_BST::PRE_ORDER_SELECT(Database_BST_Node *curNode, int selectNum)
+{
 
-
-
-Database_BST_Node* Database_BST::PRE_ORDER_SELECT(Database_BST_Node * curNode, int selectNum){
-
-    if (curNode != NULL) {
-        if(curNode->getNumber()==selectNum)
+    if (curNode != NULL)
+    {
+        if (curNode->getNumber() == selectNum)
             return curNode;
-        else if(curNode->getNumber()>selectNum)
+        else if (curNode->getNumber() > selectNum)
             PRE_ORDER_SELECT(curNode->getLeftChild(), selectNum);
-        else if(curNode->getNumber()<selectNum)
+        else if (curNode->getNumber() < selectNum)
             PRE_ORDER_SELECT(curNode->getRightChild(), selectNum);
     }
 }
@@ -264,87 +262,107 @@ void Database_BST::POST_DELETE(Database_BST_Node *curNode)
     }
 }
 
-void Database_BST::Iterative_POST_ORDER(Queue* q){
+void Database_BST::Iterative_POST_ORDER(Queue *q, Database_BST_Node* present)
+{
+    stack<Database_BST_Node *> s;
+    while (true)
+    {
+        if (present == NULL)
+        {
+            return;
+        }
 
-    Database_BST_Node* currentNode = root;
-    stack<Database_BST_Node*>s;
-    while(true){
-        if(currentNode==NULL)
-        return;
-        if(currentNode->checkSum==0)
-        s.push(currentNode);
-        else if(currentNode->checkSum==1){
-            while(currentNode->checkSum==1){
+        if (present->isInsert == false)
+        {
+            s.push(present);
+        }
+        else if (present->isInsert == true)
+        {
+            while (present->isInsert == true)
+            {
                 s.pop();
-                if(s.empty()){
+                if (s.empty())
+                {
                     return;
                 }
-                currentNode = s.top();
+                present = s.top();
             }
                 
-            if(s.empty())
-            return;
-            currentNode = s.top();
+            present = s.top();
         }
-        else
-        return;
 
-        if(currentNode->getLeftChild()!=NULL && currentNode->getLeftChild()->checkSum==0){
-            currentNode=currentNode->getLeftChild();
-            continue;
+        if ((present->getLeftChild() != NULL && present->getLeftChild()->isInsert == false)||(present->getRightChild() != NULL && present->getRightChild()->isInsert == false))
+        {
+            if(present->getLeftChild() != NULL && present->getLeftChild()->isInsert == false){
+                present = present->getLeftChild();
+
+                goto repeat; // ginore push to stack
+            }
+            else if(present->getRightChild() != NULL && present->getRightChild()->isInsert == false){
+                present = present->getRightChild();
+
+                goto repeat; // ignore push to stack
+            }
         }
-        if(currentNode->getRightChild()!=NULL && currentNode->getRightChild()->checkSum==0){
-            currentNode=currentNode->getRightChild();
-            continue;
-        }
-        q->push(currentNode->getNumber(), currentNode->getTitle());
-        currentNode->checkSum=1;
-        s.pop();
-        if(s.empty()){
-            return;
-        } 
         else{
-            currentNode=s.top();
-        } 
+            q->push(present->getNumber(), present->getTitle());
+            s.pop(); // insert after q, pop stack's top node
+            present->isInsert = true;
+        }
+
+        if (s.empty()==false)
+        {
+            present = s.top();
+        }
+        else if(s.empty()==true)
+        {
+            return;
+        }
+
+        repeat:
+        if(present==NULL){
+            return;
+        }
     }
 }
 
-void Database_BST::BoyerMoore(Queue* q, string txt, string pat){
+void Database_BST::BoyerMoore(Queue *q, string txt, string pat)
+{
 
-    int m = pat.size();  
-    int n = txt.size();  
-  
-    int badchar[NO_OF_CHARS];  
-  
-    badChar(pat, m, badchar);  
-  
-    int s = 0; 
-    while(s <= (n - m))  
-    {  
-        int j = m - 1;  
-  
-        while(j >= 0 && pat[j] == txt[s + j])  
-            j--;  
-  
+    int m = pat.size();
+    int n = txt.size();
 
-        if (j < 0)  
-        {  
-            cout<<"\""<<q->getFront()->getTitle()<<"\""<<" / "<<q->getFront()->getNumber()<<endl;
+    int badchar[NO_OF_CHARS];
 
-             return;
-  
+    badChar(pat, m, badchar);
+
+    int s = 0;
+    while (s <= (n - m))
+    {
+        int j = m - 1;
+
+        while (j >= 0 && pat[j] == txt[s + j])
+            j--;
+
+        if (j < 0)
+        {
+            cout << "\"" << q->getFront()->getTitle() << "\""
+                 << " / " << q->getFront()->getNumber() << endl;
+
+            return;
         }
         else
-            s += max(1, j - badchar[txt[s + j]]);  
-    }  
+            s += max(1, j - badchar[txt[s + j]]);
+    }
 }
 
-void Database_BST::badChar(string str, int size, int badchar[NO_OF_CHARS]){
-    int i;  
-  
-    for (i = 0; i < NO_OF_CHARS; i++)  
-        badchar[i] = -1;  
-  
-    for (i = 0; i < size; i++)  
-        badchar[(int) str[i]] = i;  
+void Database_BST::badChar(string str, int size, int badchar[NO_OF_CHARS])
+{
+    int i;
+
+    for (i = 0; i < NO_OF_CHARS; i++)
+        badchar[i] = -1;
+
+    for (i = 0; i < size; i++)
+        badchar[(int)str[i]] = i;
 }

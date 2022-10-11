@@ -109,12 +109,14 @@ private:
     int number;
     string folder;
     string title;
+    
     Database_BST_Node *leftChild;
     Database_BST_Node *rightChild;
     Database_BST_Node *parent;
 
 public:
-    int checkSum;
+    bool isInsert;
+
     Database_BST_Node();
     void setNumber(int number);
     int getNumber();
@@ -152,7 +154,7 @@ public:
     Database_BST_Node *PRE_ORDER_SELECT(Database_BST_Node *curNode, int numberBST);
     void PRINT();
     void POST_DELETE(Database_BST_Node *curNode); // 후위순회 순으로 동적할당 해제하는 함수
-    void Iterative_POST_ORDER(Queue *q);
+    void Iterative_POST_ORDER(Queue *q, Database_BST_Node* initial);
     void BoyerMoore(Queue* q, string txt, string pat);
     void badChar(string str, int size,  int badchar[NO_OF_CHARS]);
 };
