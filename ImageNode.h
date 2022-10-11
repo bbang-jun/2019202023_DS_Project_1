@@ -2,25 +2,28 @@
 #include <iostream>
 using namespace std;
 
-class ImageNode
-{
-	friend class TreeNode;
-	friend class BinarySearchTree;
-	friend class TreeManager;
-private:
-	string m_name;
-	string dirname;
+class ImageNode{
+	private:
+		ImageNode* next;
+		unsigned char imagePixel;
 
-	int unique_number;
+	public:
+		ImageNode();
+		~ImageNode();
+		void setNext(ImageNode* next);
+		ImageNode* getNext();
+		void setImagePixel(unsigned char imagePixel);
+		unsigned char getImagePixel();
+};
 
-public:
-	ImageNode() { }
-	ImageNode(string name, string dir, int number){
-
-	}
-
-	friend ostream& operator<<(ostream& os, const ImageNode& node) {
-		os << "(node.m_name: " << node.m_name << "), "; //Debug with print
-		return os;
-	}
+class Image{
+	private:
+		ImageNode* head;
+		
+	public:
+		void setHead(ImageNode* node);
+		ImageNode* getHead();
+		void push(ImageNode* node);
+		ImageNode* s_pop(); // pop of stack
+		ImageNode* q_pop(); // pop of queue
 };

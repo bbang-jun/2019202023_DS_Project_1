@@ -7,6 +7,7 @@ Database_BST_Node::Database_BST_Node() // consturctor of Database_BST_Node
     leftChild = NULL;
     rightChild = NULL;
     parent = NULL;
+    next=NULL;
 }
 
 void Database_BST_Node::setNumber(int number) { this->number = number; }
@@ -227,6 +228,16 @@ void Database_BST::IN_ORDER(Database_BST_Node *curNode)
     }
 }
 
+void Database_BST::numberFind(Database_BST_Node *curNode)
+{
+    if (curNode != NULL)
+    {
+        IN_ORDER(curNode->getLeftChild());
+        cout << curNode->getFolder() << " / \"" << curNode->getTitle() << "\" / " << curNode->getNumber() << endl;
+        IN_ORDER(curNode->getRightChild());
+    }
+}
+
 Database_BST_Node *Database_BST::PRE_ORDER_SELECT(Database_BST_Node *curNode, int selectNum)
 {
 
@@ -262,7 +273,7 @@ void Database_BST::POST_DELETE(Database_BST_Node *curNode)
     }
 }
 
-void Database_BST::Iterative_POST_ORDER(Queue *q, Database_BST_Node* present)
+void Database_BST::SEARCH_TRAVERSAL(Queue *queue, Database_BST_Node* present)
 {
     stack<Database_BST_Node *> s;
     while (true)
@@ -305,7 +316,7 @@ void Database_BST::Iterative_POST_ORDER(Queue *q, Database_BST_Node* present)
             }
         }
         else{
-            q->push(present->getNumber(), present->getTitle());
+            queue->push(present->getNumber(), present->getTitle());
             s.pop(); // insert after q, pop stack's top node
             present->isInsert = true;
         }
@@ -319,50 +330,51 @@ void Database_BST::Iterative_POST_ORDER(Queue *q, Database_BST_Node* present)
             return;
         }
 
-        repeat:
-        if(present==NULL){
-            return;
-        }
+        repeat:;
     }
 }
 
-void Database_BST::BoyerMoore(Queue *q, string txt, string pat)
+void Database_BST::SEARCH_BOYERMOORE(Queue *q, string title, string word, int lengthOfTitle, int lengthOfWord)
 {
+    int count=0, temp= 0, wordMoveCount = 0;
+    int minusPrint = lengthOfWord - 1;
+    int differLength=lengthOfTitle - lengthOfWord;
+    int bch[500]; 
 
-    int m = pat.size();
-    int n = txt.size();
 
-    int badchar[NO_OF_CHARS];
+    while(count<500){
+        bch[count] = -1;
+        count++;
+    }
 
-    badChar(pat, m, badchar);
-
-    int s = 0;
-    while (s <= (n - m))
+    for (count = 0; count < lengthOfWord; count++){
+        temp = word[count];
+        bch[temp] = count;
+    }
+        
+    while (!(wordMoveCount > differLength))
     {
-        int j = m - 1;
+        while (!(minusPrint < 0) && word[minusPrint] == title[wordMoveCount + minusPrint])
+            minusPrint--;
 
-        while (j >= 0 && pat[j] == txt[s + j])
-            j--;
+        int titleIndex=wordMoveCount+minusPrint;
+        int bchIndex=title[titleIndex];
 
-        if (j < 0)
+        if (minusPrint < 0)
         {
-            cout << "\"" << q->getFront()->getTitle() << "\""
-                 << " / " << q->getFront()->getNumber() << endl;
-
+            cout << "\"" << q->getFront()->getTitle() << "\"" << " / " << q->getFront()->getNumber() << endl;
             return;
         }
-        else
-            s += max(1, j - badchar[txt[s + j]]);
+        else{
+            if(minusPrint-bch[bchIndex] >1 ){
+                wordMoveCount+=minusPrint-bch[bchIndex];
+            }
+            else if(minusPrint-bch[bchIndex] <1){
+                wordMoveCount+=1;
+            }
+            else{
+                wordMoveCount+=1;
+            }
+        }
     }
-}
-
-void Database_BST::badChar(string str, int size, int badchar[NO_OF_CHARS])
-{
-    int i;
-
-    for (i = 0; i < NO_OF_CHARS; i++)
-        badchar[i] = -1;
-
-    for (i = 0; i < size; i++)
-        badchar[(int)str[i]] = i;
 }

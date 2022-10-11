@@ -26,7 +26,8 @@ Manager::Manager()
 {
     list = new Loaded_LIST;
     tree = new Database_BST;
-    q = new Queue;
+    queue = new Queue;
+    stack = new Stack;
 }
 
 void Manager::Run(const char *filepath)
@@ -302,17 +303,19 @@ void Manager::PRINT()
 void Manager::SEARCH()
 {
     string word;
-    char *tokWord = strtok(NULL, " ");
+    char *tokWord = strtok(NULL, "");
     word = tokWord;
     word.erase(find(word.begin(), word.end(), '"'));
     word.erase(find(word.begin(), word.end(), '"'));
     cout<<"=======SEARCH==============="<<endl;
-    tree->Iterative_POST_ORDER(q, tree->getRoot());
+    tree->SEARCH_TRAVERSAL(queue, tree->getRoot());
 
     while(1){
-        tree->BoyerMoore(q, q->getFront()->getTitle(), word);
-        q->pop();
-        if(q->isEmpty()==false)
+        int lengthOfTitle = queue->getFront()->getTitle().length(); 
+        int lengthOfWord = word.length();
+        tree->SEARCH_BOYERMOORE(queue, queue->getFront()->getTitle(), word, lengthOfTitle, lengthOfWord);
+        queue->pop();
+        if(queue->isEmpty()==false)
             break;
     }
     cout<<"==========================="<<endl<<endl;
@@ -338,10 +341,65 @@ void Manager::SELECT()
     path.append(selectNode->getTitle());
     path.append(".RAW");
     cout<<path<<endl;
+    
+    FILE* output_file;
+
+    unsigned char output_data[256][256];
+
+    input_file=fopen(path.c_str(), "rb");
+    if(input_file==NULL){
+        cout<<"file not found"<<endl;
+    }
+    fread(input_data, sizeof(unsigned char), 256*256, input_file);
+
+    // for(int i=0; i<256; i++)
+    //     for(int j=0; j<256; j++)
+    //         output_data[i][j]=255-input_data[i][j];
+
+    // output_file = fopen("./the booooo.RAW", "wb");
+    // fwrite(output_data, sizeof(unsigned char), 256*256, output_file);
+    fclose(input_file);
+
+    cout<<"==========SELECT============"<<endl;
+    cout<<"SUCCESS"<<endl;
+    cout<<"=========================="<<endl;
 }
 
 void Manager::EDIT()
 {
+    char *tokWay, *tokLight;
+    string way;
+    int light=0;
+    tokWay = strtok(NULL, " ");
+    if (tokWay == NULL){
+        cout<<"========ERROR========"<<endl;
+        cout<<"800"<<endl;
+        cout<<"===================="<<endl;
+        return;
+    }
+    way=tokWay;
+
+    if(way=="-f"){
+
+    }
+    else if(way=="-l"){
+        tokLight=strtok(NULL, " ");
+        if(tokLight == NULL){
+            cout<<"========ERROR========"<<endl;
+            cout<<"800"<<endl;
+            cout<<"===================="<<endl;
+            return;
+        }
+        else{
+            light=atoi(tokLight);
+            
+        }
+    }
+    else if(way=="-r"){
+
+    }
+
+    
 }
 
 void Manager::EXIT()

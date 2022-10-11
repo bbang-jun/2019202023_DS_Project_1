@@ -1,5 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
-
+#pragma once
 #include "Loaded_LIST.h"
 #include "Database_BST.h"
 #include <iostream>
@@ -23,12 +23,15 @@ private:
 
 
 public:
+    FILE* input_file;
+    unsigned char input_data[256][256];
     const char *filepath;
     string command, number, title, folder;
     string firstArg, secondArg;
     Loaded_LIST *list;
     Database_BST* tree;
-    Queue* q;
+    Queue* queue;
+    Stack* stack;
     Manager();
     ~Manager();
     void Run(const char* filepath);
