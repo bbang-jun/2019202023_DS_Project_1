@@ -1,6 +1,6 @@
 #pragma once
 using namespace std;
-#include <string> // for use string library
+#include <string> 
 #include <iostream>
 #include <stack>
 #include <fstream>
@@ -9,7 +9,7 @@ class Queue;
 class Stack;
 class QNode;
 
-class Database_BST_Node
+class Database_BST_Node // Database_BST_Node class for satisfied assignment specification
 {
 private:
     ofstream out;
@@ -55,7 +55,7 @@ public:
     }
 };
 
-class Database_BST
+class Database_BST // Database_BST class for satisfied assignment specification
 {
 private:
     Database_BST_Node *root;
@@ -77,7 +77,73 @@ public:
     void SEARCH_BOYERMOORE(Queue *q, string title, string word, int lengthOfTitle, int lengthOfWord);
 };
 
-class QNode
+class Stack // Stack class
+{
+public:
+    Database_BST_Node *top;
+    Database_BST_Node *bottom;
+    Stack() // constructor
+    {
+        this->top = NULL;
+        this->bottom = NULL;
+    }
+
+    void push(int number, string title) // information save to stack
+    {
+        Database_BST_Node *newNode = new Database_BST_Node;
+        newNode->setNumber(number);
+        newNode->setTitle(title);
+
+        if (top == NULL)
+        {
+            top = newNode;
+            bottom = newNode;
+        }
+        else
+        {
+            top->setNext(newNode);
+            top = top->getNext();
+        }
+    }
+    void pop() // remove the top from stack
+    {
+        if (top == bottom)
+        {
+            top=NULL;
+            bottom=NULL;
+            return;
+        }
+        else if(bottom == NULL){
+            return;
+        }
+        else
+        {
+            Database_BST_Node *temp = bottom;
+            while (temp->getNext() != top && temp->getNext()!=NULL)
+            {
+                temp = temp->getNext();
+            }
+
+            delete top;
+            temp->setNext(NULL);
+            top = temp;
+            return;
+        }
+    }
+    bool isEmpty() // judge stack is empty
+    {
+        if (bottom == NULL)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+};
+
+class QNode // Queue's node class
 {
 private:
     string title;
@@ -86,7 +152,7 @@ private:
     QNode *prev;
 
 public:
-    QNode()
+    QNode() // constructor
     {
         number = 0;
         next = NULL;
@@ -102,14 +168,14 @@ public:
     QNode *getPrev() { return this->prev; };
 };
 
-class Queue
+class Queue // Queue class
 {
 private:
-    QNode *front;
+    QNode *front; 
     QNode *rear;
 
 public:
-    Queue()
+    Queue() // constructor
     {
         front = NULL;
         rear = NULL;
@@ -118,7 +184,7 @@ public:
     QNode *getFront() { return this->front; }
     void setRear(QNode *node) { this->rear = node; }
     QNode *getRear() { return this->rear; }
-    bool isEmpty()
+    bool isEmpty() // judge queue is empty
     {
         if (front == NULL)
         {
@@ -130,7 +196,7 @@ public:
         }
     }
 
-    void push(int number, string title)
+    void push(int number, string title) // push the information to queue
     {
         QNode *newNode = new QNode;
         newNode->setNumber(number);
@@ -147,7 +213,7 @@ public:
             rear = rear->getNext();
         }
     }
-    void pop()
+    void pop() // remove the front from the queue
     {
         if (front == rear)
         {
@@ -174,71 +240,5 @@ public:
     string returnTitle()
     {
         return front->getTitle();
-    }
-};
-
-class Stack
-{
-public:
-    Database_BST_Node *top;
-    Database_BST_Node *bottom;
-    Stack()
-    {
-        this->top = NULL;
-        this->bottom = NULL;
-    }
-
-    void push(int number, string title)
-    {
-        Database_BST_Node *newNode = new Database_BST_Node;
-        newNode->setNumber(number);
-        newNode->setTitle(title);
-
-        if (top == NULL)
-        {
-            top = newNode;
-            bottom = newNode;
-        }
-        else
-        {
-            top->setNext(newNode);
-            top = top->getNext();
-        }
-    }
-    void pop()
-    {
-        if (top == bottom)
-        {
-            top=NULL;
-            bottom=NULL;
-            return;
-        }
-        else if(bottom == NULL){
-            return;
-        }
-        else
-        {
-            Database_BST_Node *temp = bottom;
-            while (temp->getNext() != top && temp->getNext()!=NULL)
-            {
-                temp = temp->getNext();
-            }
-
-            delete top;
-            temp->setNext(NULL);
-            top = temp;
-            return;
-        }
-    }
-    bool isEmpty()
-    {
-        if (bottom == NULL)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
     }
 };

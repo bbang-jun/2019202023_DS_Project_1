@@ -25,15 +25,17 @@ unsigned char ImageNode::getImagePixel()
     return this->imagePixel;
 }
 
-// Image class
+// Image class 
 void Image::setHead(ImageNode *newNode)
 {
     this->head = newNode;
 }
+
 ImageNode *Image::getHead()
 {
     return this->head;
 }
+
 void Image::push(ImageNode *newNode)
 {
 
