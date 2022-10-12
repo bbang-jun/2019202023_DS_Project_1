@@ -10,7 +10,11 @@ void Loaded_LIST_Node::setTitle(string title) { this->title = title; }
 string Loaded_LIST_Node::getTitle() { return this->title; }
 void Loaded_LIST_Node::setNext(Loaded_LIST_Node *next) { this->next = next; }
 Loaded_LIST_Node *Loaded_LIST_Node::getNext() { return this->next; }
-Loaded_LIST_Node::Loaded_LIST_Node() { next = NULL; }
+Loaded_LIST_Node::Loaded_LIST_Node()
+{
+    next = NULL;
+    out.open("log.txt", ios::app);
+}
 
 void D2Node::setD2Next(D2Node *New) { this->D2Next = New; }
 D2Node *D2Node::getD2Next() { return this->D2Next; }
@@ -20,6 +24,7 @@ void D2Node::setD2Folder(string folder) { this->folder = folder; }
 string D2Node::getD2Folder() { return this->folder; }
 D2Node::D2Node()
 {
+    out.open("log.txt", ios::app);
     nodeHead = NULL;
     nodeTail = NULL;
     next = NULL;
@@ -28,6 +33,7 @@ D2Node::D2Node()
 
 Loaded_LIST::Loaded_LIST()
 {
+    out.open("log.txt", ios::app);
     folderHead = NULL;
     folderTail = NULL;
     imgCount = 0; // 100개 넘겼는지 판단
@@ -55,16 +61,10 @@ void Loaded_LIST::firstINSERT(string folder, D2Node *node)
 
 void Loaded_LIST::INSERT(string command, string number, string folder, string title, Loaded_LIST_Node *node)
 {
-
-    // if (node != NULL)
-    // {
-    //     // find하고 넣기
-    //     return;
-    // }
-    if (this->imgCount == 100)
+    if (imgCount == 100)
     {
-        // todo:implementation
-        //  delete
+        DELETE(folderHead->getNext()->getFolder(), folderHead->getNext()->getTitle(), NULL);
+        imgCount--;
     }
     Loaded_LIST_Node *newNode = new Loaded_LIST_Node;
     newNode->setNumber(number);
@@ -76,8 +76,8 @@ void Loaded_LIST::INSERT(string command, string number, string folder, string ti
         curD2Node = curD2Node->getD2Next();
 
     if (command == "MODIFY")
-    {                                                           // node = prevNode EXIST(node->getFolder(), node->getTitle()) == true
-        if (node==NULL) // modify head node
+    {                     // node = prevNode EXIST(node->getFolder(), node->getTitle()) == true
+        if (node == NULL) // modify head node
         {
             Loaded_LIST_Node *tempNode = curD2Node->nodeHead;
             curD2Node->setNext(newNode);
@@ -145,6 +145,58 @@ void Loaded_LIST::DELETE(string folder, string title, Loaded_LIST_Node *node)
 
         delete delNode;
     }
+}
+
+void Loaded_LIST::ALLDELETE()
+{
+    D2Node *curD2Node = folderHead;
+    Loaded_LIST_Node *curNode;
+    Loaded_LIST_Node *delNode;
+
+    while (curD2Node->getD2Next() != NULL)
+    {
+        curNode = curD2Node->getNext();
+
+        while (curNode->getNext() != NULL)
+        {
+            delNode = curNode;
+            curNode = curNode->getNext();
+            delete delNode;
+            if (curNode->getNext() == NULL)
+                delete curNode;
+        }
+
+        if (curD2Node->getD2Next() == NULL)
+        {
+            curNode = curD2Node->getNext();
+
+            while (curNode->getNext() != NULL)
+            {
+                delNode = curNode;
+                curNode = curNode->getNext();
+                delete delNode;
+                if (curNode->getNext() == NULL)
+                    delete curNode;
+            }
+        }
+        curD2Node=curD2Node->getD2Next();
+    }
+
+    D2Node*delD2Node;
+
+    curD2Node=folderHead;
+
+    while(curD2Node->getD2Next()!=NULL){
+
+        delD2Node=curD2Node;
+        curD2Node=curD2Node->getD2Next();
+        delete delD2Node;
+        if(curD2Node->getD2Next()==NULL){
+            delete curD2Node;
+        }
+    }
+    folderHead=NULL;
+    folderTail=NULL;
 }
 
 Loaded_LIST_Node *Loaded_LIST::FIND(string folder, string title)
@@ -228,7 +280,7 @@ void Loaded_LIST::PRINT()
 {
     if (folderHead == NULL)
     {
-        cout<<"NULL"<<endl;
+        out << "NULL" << endl;
         return;
     }
     D2Node *curD2Node = folderHead;
@@ -239,20 +291,20 @@ void Loaded_LIST::PRINT()
         curNode = curD2Node->nodeHead;
         while (curNode->getNext() != NULL)
         {
-            cout << curNode->getTitle() << "/" << curNode->getNumber() << endl;
+            out << curNode->getTitle() << "/" << curNode->getNumber() << endl;
             curNode = curNode->getNext();
         }
-        cout << curNode->getTitle() << "/" << curNode->getNumber() << endl;
+        out << curNode->getTitle() << "/" << curNode->getNumber() << endl;
         curD2Node = curD2Node->getD2Next();
     }
 
     curNode = curD2Node->nodeHead;
-        while (curNode->getNext() != NULL)
-        {
-            cout << curNode->getTitle() << "/" << curNode->getNumber() << endl;
-            curNode = curNode->getNext();
-        }
-        cout << curNode->getTitle() << "/" << curNode->getNumber() << endl;
+    while (curNode->getNext() != NULL)
+    {
+        out << curNode->getTitle() << "/" << curNode->getNumber() << endl;
+        curNode = curNode->getNext();
+    }
+    out << curNode->getTitle() << "/" << curNode->getNumber() << endl;
 }
 
 bool Loaded_LIST::LOADED_LIST_CHECK()

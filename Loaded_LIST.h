@@ -1,4 +1,6 @@
+#pragma once
 #include <string>
+#include <fstream>
 using namespace std;
 
 class Loaded_LIST_Node{
@@ -7,6 +9,7 @@ class Loaded_LIST_Node{
     string folder;
     string title;
     Loaded_LIST_Node* next;
+    ofstream out;
     
     public:
     Loaded_LIST_Node();
@@ -26,6 +29,7 @@ class D2Node{
     string folder;
     Loaded_LIST_Node* next; // 헤드 노드를 가리킴(가로)
     D2Node * D2Next; // 다음 파일 선행 노드를 가리킴(세로)
+    ofstream out;
     
     public:
     D2Node();
@@ -41,6 +45,7 @@ class D2Node{
 
 class Loaded_LIST{
     public:
+    ofstream out;
     D2Node* folderHead;
     D2Node* folderTail;
     int imgCount=0;
@@ -48,6 +53,7 @@ class Loaded_LIST{
     ~Loaded_LIST(){}
     void firstINSERT(string folder, D2Node* node);
     void INSERT(string command, string number, string folder, string title, Loaded_LIST_Node* node);
+    void ALLDELETE();
     void DELETE(string folderName, string title, Loaded_LIST_Node* node); // delete
     Loaded_LIST_Node* FIND(string folderName, string title); // 
     Loaded_LIST_Node* returnPrevNode(string folderName, string title);

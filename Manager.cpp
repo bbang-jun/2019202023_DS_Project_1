@@ -1,6 +1,5 @@
 #include "Manager.h"
 #include <algorithm>
-//#include <stack>
 
 void Run(const char *filepath);
 void LOAD(const char *filepath);
@@ -29,16 +28,18 @@ Manager::Manager()
 
 void Manager::Run(const char *filepath)
 {
+        
     ifstream inCommand(filepath);
+    out.open("log.txt", ios::app);
     if (!inCommand)
-        cout << "Unable to open command.txt" << endl;
+        out << "Unable to open command.txt" << endl;
     else
     {
         while (!inCommand.eof())
         {
             getline(inCommand, command, '\n');
             int str_length = command.length();
-            //char *charCommand = new char[str_length];
+            // char *charCommand = new char[str_length];
             char charCommand[100];
             strcpy(charCommand, command.c_str());
             char *ptr = strtok(charCommand, " ");
@@ -90,21 +91,21 @@ void Manager::LOAD()
     ifstream inCSV("img_files/filesnumbers.csv");
     if (!inCSV) // 7p implementation CSV ERROR code
     {
-        cout << "========ERROR========" << endl;
-        cout << "100" << endl;
-        cout << "====================" << endl
+        out << "========ERROR========" << endl;
+        out << "100" << endl;
+        out << "====================" << endl
              << endl;
     }
     else
     {
         bool first = true;
-        cout << "=======LOAD========" << endl;
+        out << "=======LOAD========" << endl;
         list->firstINSERT("img_files", NULL);
         while (!inCSV.eof())
         {
             getline(inCSV, number, ','); // string
             int str_length1 = number.length();
-            //char *ch1 = new char[str_length1];
+            // char *ch1 = new char[str_length1];
             char ch1[100];
             strcpy(ch1, number.c_str()); // string -> char*
             char *ptr1 = strtok(ch1, ",\n ");
@@ -124,7 +125,7 @@ void Manager::LOAD()
 
             getline(inCSV, title, '\n'); // string
             int str_length2 = title.length();
-            //char *ch2 = new char[str_length2];
+            // char *ch2 = new char[str_length2];
             char ch2[100];
             strcpy(ch2, title.c_str()); // string -> char*
             char *ptr2 = strtok(ch2, "\r\n.RAW");
@@ -134,7 +135,7 @@ void Manager::LOAD()
         list->PRINT();
 
         inCSV.close();
-        cout << "===================" << endl
+        out << "===================" << endl
              << endl;
     }
 }
@@ -150,29 +151,29 @@ void Manager::ADD()
 
     if (ptr1 == NULL || ptr2 == NULL || list->LOADED_LIST_CHECK())
     {
-        cout << "========ERROR========" << endl;
-        cout << "200" << endl;
-        cout << "====================" << endl;
+        out << "========ERROR========" << endl;
+        out << "200" << endl;
+        out << "====================" << endl;
         return;
     }
 
     ifstream newCSV(path);
     if (!newCSV) // 7p implementation CSV ERROR code
     {
-        cout << "========ERROR========" << endl;
-        cout << "200" << endl;
-        cout << "====================" << endl;
+        out << "========ERROR========" << endl;
+        out << "200" << endl;
+        out << "====================" << endl;
     }
     else
     {
         bool first = true;
         list->firstINSERT(ptr1, NULL);
-        cout << "=======ADD========" << endl;
+        out << "=======ADD========" << endl;
         while (!newCSV.eof())
         {
             getline(newCSV, number, ','); // string
             int str_length1 = number.length();
-            //char *ch3 = new char[str_length1];
+            // char *ch3 = new char[str_length1];
             char ch3[100];
             strcpy(ch3, number.c_str()); // string -> char*
             char *ptr3 = strtok(ch3, ",\n ");
@@ -192,7 +193,7 @@ void Manager::ADD()
 
             getline(newCSV, title, '\n'); // string
             int str_length2 = title.length();
-            //char *ch4 = new char[str_length2];
+            // char *ch4 = new char[str_length2];
             char ch4[100];
             strcpy(ch4, title.c_str()); // string -> char*
             char *ptr4 = strtok(ch4, ".RAW\r\n");
@@ -200,8 +201,8 @@ void Manager::ADD()
             list->INSERT(command, number, folder, title, NULL);
         }
 
-        cout << "success" << endl;
-        cout << "===================" << endl
+        out << "success" << endl;
+        out << "===================" << endl
              << endl;
         newCSV.close();
     }
@@ -220,9 +221,9 @@ void Manager::MODIFY()
 
     if (tokFolder == NULL || tokTitle == NULL || tokNumber == NULL || list->Unique_Number_CHECK(tokNumber))
     {
-        cout << "========ERROR========" << endl;
-        cout << "300" << endl;
-        cout << "====================" << endl
+        out << "========ERROR========" << endl;
+        out << "300" << endl;
+        out << "====================" << endl
              << endl;
         return;
     }
@@ -231,15 +232,20 @@ void Manager::MODIFY()
         Loaded_LIST_Node *prevNode = list->returnPrevNode(tokFolder, tokTitle); // 삭제할 노드의 이전 노드가 새로 생긴 노드를 가리켜야 하므로 생성
         list->DELETE(tokFolder, tokTitle, prevNode);
         list->INSERT(command, tokNumber, tokFolder, tokTitle, prevNode); // INSERT 안에서 prevNode가 새로 생긴 노드를 가리킴
-        cout << "=======MODIFY========" << endl;
-        cout << "SUCCESS" << endl;
-        cout << "=====================" << endl
+        out << "=======MODIFY========" << endl;
+        out << "SUCCESS" << endl;
+        out << "=====================" << endl
              << endl;
     }
 }
 
 void Manager::MOVE()
 {
+    if(list->folderHead==NULL){
+        out<<"========ERROR========"<<endl;
+        out<<"400"<<endl;
+        out<<"===================="<<endl;
+    }
     D2Node *prevD2Node = list->folderHead;
     D2Node *curD2Node = list->folderTail;
     Loaded_LIST_Node *curNode;
@@ -255,49 +261,44 @@ void Manager::MOVE()
             prevNode = list->returnPrevNode(curNode->getFolder(), curNode->getTitle());
             numberBST = stoi(curNode->getNumber());
             tree->INSERT(command, numberBST, curNode->getFolder(), curNode->getTitle(), tree->getRoot());
-
-            list->DELETE(curNode->getFolder(), curNode->getTitle(), prevNode);
             curNode = prevNode;
         }
         if (curNode == curD2Node->getNext())
         {
             numberBST = stoi(curNode->getNumber());
             tree->INSERT(command, numberBST, curNode->getFolder(), curNode->getTitle(), tree->getRoot());
-            list->DELETE(curNode->getFolder(), curNode->getTitle(), prevNode);
         }
         curD2Node = prevD2Node;
     }
     if (curD2Node == list->folderHead)
     {
-        curNode=curD2Node->nodeTail;
+        curNode = curD2Node->nodeTail;
         while (curNode != curD2Node->getNext())
         {
             prevNode = list->returnPrevNode(curNode->getFolder(), curNode->getTitle());
             numberBST = stoi(curNode->getNumber());
             tree->INSERT(command, numberBST, curNode->getFolder(), curNode->getTitle(), tree->getRoot());
-
-            list->DELETE(curNode->getFolder(), curNode->getTitle(), prevNode);
             curNode = prevNode;
         }
         if (curNode == curD2Node->getNext())
         {
             numberBST = stoi(curNode->getNumber());
             tree->INSERT(command, numberBST, curNode->getFolder(), curNode->getTitle(), tree->getRoot());
-            list->DELETE(curNode->getFolder(), curNode->getTitle(), prevNode);
         }
     }
-    //list->PRINT();
+    list->ALLDELETE();
 }
 
 void Manager::PRINT()
 {
-    cout<<"=======PRINT================"<<endl;
+    out << "=======PRINT================" << endl;
     tree->PRINT();
-    cout<<"============================"<<endl;
-    if(tree->getRoot()==NULL){
-        cout<<"========ERROR========"<<endl;
-        cout<<"500"<<endl;
-        cout<<"===================="<<endl;
+    out << "============================" << endl<<endl;
+    if (tree->getRoot() == NULL)
+    {
+        out << "========ERROR========" << endl;
+        out << "500" << endl;
+        out << "====================" << endl;
     }
 }
 
@@ -308,29 +309,33 @@ void Manager::SEARCH()
     word = tokWord;
     word.erase(find(word.begin(), word.end(), '"'));
     word.erase(find(word.begin(), word.end(), '"'));
-    cout<<"=======SEARCH==============="<<endl;
+    out << "=======SEARCH===============" << endl;
     tree->SEARCH_TRAVERSAL(queue, tree->getRoot());
 
-    while(1){
-        int lengthOfTitle = queue->getFront()->getTitle().length(); 
+    while (1)
+    {
+        int lengthOfTitle = queue->getFront()->getTitle().length();
         int lengthOfWord = word.length();
         tree->SEARCH_BOYERMOORE(queue, queue->getFront()->getTitle(), word, lengthOfTitle, lengthOfWord);
         queue->pop();
-        if(queue->isEmpty()==false)
+        if (queue->isEmpty() == false)
             break;
     }
-    cout<<"==========================="<<endl<<endl;
+    out << "===========================" << endl
+         << endl;
 }
 
 void Manager::SELECT()
 {
+    inputPath = "";
+    outFileName = "";
     char *tokNumber;
     tokNumber = strtok(NULL, " ");
     if (tokNumber == NULL)
     {
-        cout << "========ERROR========" << endl;
-        cout << "700" << endl;
-        cout << "====================" << endl;
+        out << "========ERROR========" << endl;
+        out << "700" << endl;
+        out << "====================" << endl;
         return;
     }
     number = tokNumber;
@@ -341,12 +346,11 @@ void Manager::SELECT()
     inputPath.append(selectNode->getTitle());
     inputPath.append(".RAW");
     outFileName.append(selectNode->getTitle());
-    outFileName.append("_flipped");
 
     input_file = fopen(inputPath.c_str(), "rb");
     if (input_file == NULL)
     {
-        cout << "file not found" << endl;
+        out << "file not found" << endl;
     }
     fread(input_data, sizeof(unsigned char), 256 * 256, input_file);
 
@@ -358,9 +362,10 @@ void Manager::SELECT()
     // fwrite(output_data, sizeof(unsigned char), 256*256, output_file);
     fclose(input_file);
 
-    cout << "==========SELECT============" << endl;
-    cout << "SUCCESS" << endl;
-    cout << "==========================" << endl;
+    out << "==========SELECT============" << endl;
+    out << "SUCCESS" << endl;
+    out << "==========================" << endl
+         << endl;
 }
 
 void Manager::EDIT()
@@ -369,28 +374,56 @@ void Manager::EDIT()
     unsigned char output_data[256][256];
     char *tokWay, *tokLight;
     string way;
+    outputPath = "";
+    // output files path
     int light = 0;
     tokWay = strtok(NULL, " ");
     if (tokWay == NULL)
     {
-        cout << "========ERROR========" << endl;
-        cout << "800" << endl;
-        cout << "====================" << endl;
+        out << "========ERROR========" << endl;
+        out << "800" << endl;
+        out << "====================" << endl;
         return;
     }
     way = tokWay;
 
     if (way == "-f")
     {
+        for (int i = 0; i < 256; i++)
+        {
+            for (int j = 0; j < 256; j++)
+            {
+                ImageNode *imageNode = new ImageNode;
+                imageNode->setImagePixel(input_data[i][j]);
+                image->push(imageNode);
+            }
+        }
+        for (int i = 0; i < 256; i++)
+        {
+            for (int j = 0; j < 256; j++)
+            {
+                output_data[i][j] = image->s_pop()->getImagePixel();
+            }
+        }
+        outFileName.append("_flipped");
+        outputPath.append("./Result/");
+        outputPath.append(outFileName);
+        output_file = fopen(outputPath.c_str(), "wb");
+        fwrite(output_data, sizeof(unsigned char), 256 * 256, output_file);
+        fclose(output_file);
+        out << "==========EDIT============" << endl;
+        out << "SUCCESS" << endl;
+        out << "=========================" << endl
+             << endl;
     }
     else if (way == "-l")
     {
         tokLight = strtok(NULL, " ");
         if (tokLight == NULL)
         {
-            cout << "========ERROR========" << endl;
-            cout << "800" << endl;
-            cout << "====================" << endl;
+            out << "========ERROR========" << endl;
+            out << "800" << endl;
+            out << "====================" << endl;
             return;
         }
         else
@@ -405,38 +438,65 @@ void Manager::EDIT()
                     image->push(imageNode);
                 }
             }
-            ImageNode *curNode;
 
-            for(int i=0; i<256; i++){
-                for(int j=0; j<256; j++){
-                    int sum = image->q_pop()->getImagePixel()+light;
-                    if(sum>255){
+            for (int i = 0; i < 256; i++)
+            {
+                for (int j = 0; j < 256; j++)
+                {
+                    int sum = image->q_pop()->getImagePixel() + light;
+                    if (sum > 255)
+                    {
                         output_data[i][j] = 255;
                     }
-                    else if(sum<0){
+                    else if (sum < 0)
+                    {
                         output_data[i][j] = 0;
                     }
-                    else if(sum>=0 && sum<=255){
-                        output_data[i][j]=sum;
+                    else if (sum >= 0 && sum <= 255)
+                    {
+                        output_data[i][j] = sum;
                     }
                 }
             }
+            outFileName.append("_adjusted");
             outputPath.append("./Result/");
             outputPath.append(outFileName);
             output_file = fopen(outputPath.c_str(), "wb");
-            fwrite(output_data, sizeof(unsigned char), 256*256, output_file);
-            }
+            fwrite(output_data, sizeof(unsigned char), 256 * 256, output_file);
+            fclose(output_file);
+            out << "==========EDIT============" << endl;
+            out << "SUCCESS" << endl;
+            out << "=========================" << endl
+                 << endl;
+        }
     }
     else if (way == "-r")
     {
-        
+        unsigned char output_data[128][128];
+        for (int i = 0; i < 128; i++)
+        {
+            for (int j = 0; j < 128; j++)
+            {
+                output_data[i][j] = (input_data[2 * i][2 * j] + input_data[2 * i][(2 * j) + 1] + input_data[(2 * i) + 1][2 * j] + input_data[(2 * i) + 1][(2 * j) + 1]) / 4;
+            }
+        }
+        outFileName.append("_resized");
+        outputPath.append("./Result/");
+        outputPath.append(outFileName);
+        output_file = fopen(outputPath.c_str(), "wb");
+        fwrite(output_data, sizeof(unsigned char), 256 * 256, output_file);
+        fclose(output_file);
+        out << "==========EDIT============" << endl;
+        out << "SUCCESS" << endl;
+        out << "=========================" << endl
+             << endl;
     }
 }
 
 void Manager::EXIT()
 {
-    cout << "=======EXIT========" << endl;
-    cout << "SUCCESS" << endl;
-    cout << "===================" << endl
+    out << "=======EXIT========" << endl;
+    out << "SUCCESS" << endl;
+    out << "===================" << endl
          << endl;
 }

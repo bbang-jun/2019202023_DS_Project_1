@@ -1,9 +1,9 @@
+#pragma once
 using namespace std;
 #include <string> // for use string library
 #include <iostream>
 #include <stack>
-#include <vector>
-#pragma once
+#include <fstream>
 
 class Queue;
 class Stack;
@@ -12,6 +12,7 @@ class QNode;
 class Database_BST_Node
 {
 private:
+    ofstream out;
     int number;
     string folder;
     string title;
@@ -59,8 +60,9 @@ class Database_BST
 private:
     Database_BST_Node *root;
     Database_BST_Node *parent;
-
+    ofstream out;
 public:
+    int counting;
     Database_BST();
     ~Database_BST();
     Database_BST_Node *getRoot();
@@ -147,7 +149,6 @@ public:
     }
     void pop()
     {
-
         if (front == rear)
         {
             delete front;
@@ -175,47 +176,6 @@ public:
         return front->getTitle();
     }
 };
-
-// class SNode
-// {
-// private:
-//     string title;
-//     int number;
-//     SNode *next;
-//     SNode * prev;
-
-// public:
-//     SNode()
-//     {
-//         next = NULL;
-//         prev = NULL;
-//     }
-//     void setTitle(string title)
-//     {
-//         this->title = title;
-//     }
-//     string getTitle(){
-//         return this->title;
-//     }
-//     void setNumber(int number){
-//         this->number=number;
-//     }
-//     int getNumber(){
-//         return this->number;
-//     }
-//     void *setNext(SNode *next){
-//         this->next=next;
-//     }
-//     SNode *getNext(){
-//         return this->next;
-//     }
-//     void *setPrev(SNode * prev){
-//         this->prev=prev;
-//     }
-//     SNode * getPrev(){
-//         return this->prev;
-//     }
-// };
 
 class Stack
 {

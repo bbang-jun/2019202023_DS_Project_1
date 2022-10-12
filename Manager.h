@@ -1,4 +1,5 @@
 #pragma once
+#include <fstream>
 #define _CRT_SECURE_NO_WARNINGS
 #include "Loaded_LIST.h"
 #include "Database_BST.h"
@@ -13,19 +14,14 @@ using namespace std;
 class Manager
 {
 private:
-    // the filepath for the result log
-    // const char* RESULT_LOG_PATH = "log.txt";
-    // const char* ERROR_LOG_PATH = "logERR.txt";
-
-
+    ofstream out;
 public:
-
     FILE* input_file;
     unsigned char input_data[256][256];
     const char *filepath;
     string command, number, title, folder;
     string firstArg, secondArg;
-    string inputPath, outputPath, outFileName;
+    string outputPath, inputPath, outFileName;
     Loaded_LIST *list;
     Database_BST* tree;
     Queue* queue;
