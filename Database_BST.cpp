@@ -36,16 +36,16 @@ Database_BST::Database_BST()
     parent = NULL;
 }
 
-Database_BST::~Database_BST()
-{                      // destructor of Database_BST
-    POST_DELETE(root); // 후위순회 순으로 동적할당 해제하는 함수
+Database_BST::~Database_BST() // destructor of Database_BST
+{                      
+    POST_DELETE(root); // post order way delete
 }
 
-Database_BST_Node *Database_BST::getRoot() { return this->root; }
+Database_BST_Node *Database_BST::getRoot() { return this->root; } // reuturn root
 
-void Database_BST::INSERT(string command, int number, string folder, string title, Database_BST_Node *curNode)
+void Database_BST::INSERT(string command, int number, string folder, string title, Database_BST_Node *curNode) // bst insert function
 {
-    if (this->counting == 300)
+    if (this->counting == 300) // if over 300 nodes, delete most small node
     {
         Database_BST_Node *curNode = root;
         Database_BST_Node *delNode;
@@ -58,7 +58,7 @@ void Database_BST::INSERT(string command, int number, string folder, string titl
         }
         else // curNode is not root
         {
-            while (curNode->getLeftChild() != NULL) // find most small node
+            while (curNode->getLeftChild() != NULL) // find most small node and delete
             {
                 if(curNode->getLeftChild()->getLeftChild()!=NULL){
                     delNode=curNode->getLeftChild();
@@ -73,24 +73,24 @@ void Database_BST::INSERT(string command, int number, string folder, string titl
         }
         counting--;
     }
-    if (root == NULL)
-    { // 루트 노드가 없는 경우
+    if (root == NULL) // case: root is NULL
+    {  // setting node
         Database_BST_Node *newNode = new Database_BST_Node;
-        newNode->setNumber(number); // newNode의 value는 intger
+        newNode->setNumber(number);
         newNode->setFolder(folder);
         newNode->setTitle(title);
-        newNode->setLeftChild(NULL);  // newNode의 왼쪽 자식 NULL 초기화
-        newNode->setRightChild(NULL); // newNode의 오른쪽 자식 NULL 초기화
-        root = newNode;               // root 노드와 현재 노드를 newNode로 초기화
+        newNode->setLeftChild(NULL);  
+        newNode->setRightChild(NULL); 
+        root = newNode;               
         counting++;
         return;
     }
-    else if (curNode->getNumber() > number)
-    { // 현재 노드에 저장된 값이 입력 받은 값보다 큰 경우(입력 받은 값이 작으므로 왼쪽에 삽입)
+    else if (curNode->getNumber() > number) // case: insert left
+    { 
         if (curNode->getLeftChild() == NULL)
-        {
+        { // setting node
             Database_BST_Node *newNode = new Database_BST_Node;
-            newNode->setNumber(number); // newNode의 value는 intger
+            newNode->setNumber(number); 
             newNode->setFolder(folder);
             newNode->setTitle(title);
             newNode->setLeftChild(NULL);
@@ -100,18 +100,18 @@ void Database_BST::INSERT(string command, int number, string folder, string titl
             return;
         }
         else
-        { // 왼쪽 자식이 있을 경우 INSERT 함수를 다시 실행함으로써 현재 노드의 위치를 왼쪽 자식으로 이동
+        { 
             if (curNode->getLeftChild()->getNumber() == number)
                 return;
-            INSERT(command, number, folder, title, curNode->getLeftChild());
+            INSERT(command, number, folder, title, curNode->getLeftChild()); // if left child is exist, go to leftchild and reinsert
         }
     }
     else if (curNode->getNumber() < number)
-    { // 현재 노드에 저장된 값보다 입력 받은 값이 큰 경우(입력 받은 값이 크므로 오른쪽에 삽입)
-        if (curNode->getRightChild() == NULL)
+    { 
+        if (curNode->getRightChild() == NULL) // bst is not have same value node
         {
             Database_BST_Node *newNode = new Database_BST_Node;
-            newNode->setNumber(number); // newNode의 value는 intger
+            newNode->setNumber(number); 
             newNode->setFolder(folder);
             newNode->setTitle(title);
             newNode->setLeftChild(NULL);
@@ -121,61 +121,44 @@ void Database_BST::INSERT(string command, int number, string folder, string titl
             return;
         }
         else
-        { // 오른쪽 자식이 있을 경우 INSERT 함수를 다시 실행함으로써 현재 노드의 위치를 오른쪽 자식으로 이동
-            if (curNode->getRightChild()->getNumber() == number)
+        { 
+            if (curNode->getRightChild()->getNumber() == number) // bst is not have same value node
                 return;
-            INSERT(command, number, folder, title, curNode->getRightChild());
+            INSERT(command, number, folder, title, curNode->getRightChild()); // if right child is exist, go to right and reinsert
         }
     }
 }
 
-void Database_BST::IN_ORDER(Database_BST_Node *curNode)
+void Database_BST::IN_ORDER(Database_BST_Node *curNode) // PRINT command's  In-order traversal print
 {
     if (curNode != NULL)
     {
-        IN_ORDER(curNode->getLeftChild());
+        IN_ORDER(curNode->getLeftChild()); // recursive
         out << curNode->getFolder() << " / \"" << curNode->getTitle() << "\" / " << curNode->getNumber() << endl;
-        IN_ORDER(curNode->getRightChild());
+        IN_ORDER(curNode->getRightChild()); // recursive
     }
 }
 
-void Database_BST::numberFind(Database_BST_Node *curNode)
+Database_BST_Node *Database_BST::PRE_ORDER_SELECT(Database_BST_Node *curNode, int selectNum) // SELECT command's Pre-order traversal, for find image path
 {
-    if (curNode != NULL)
-    {
-        IN_ORDER(curNode->getLeftChild());
-        out << curNode->getFolder() << " / \"" << curNode->getTitle() << "\" / " << curNode->getNumber() << endl;
-        IN_ORDER(curNode->getRightChild());
-    }
-}
-
-Database_BST_Node *Database_BST::PRE_ORDER_SELECT(Database_BST_Node *curNode, int selectNum)
-{
-
     if (curNode != NULL)
     {
         if (curNode->getNumber() == selectNum)
-            return curNode;
+            return curNode; // for find image path, it is node
         else if (curNode->getNumber() > selectNum)
-            PRE_ORDER_SELECT(curNode->getLeftChild(), selectNum);
+            PRE_ORDER_SELECT(curNode->getLeftChild(), selectNum); // recursive
         else if (curNode->getNumber() < selectNum)
-            PRE_ORDER_SELECT(curNode->getRightChild(), selectNum);
+            PRE_ORDER_SELECT(curNode->getRightChild(), selectNum); // recursive
     }
 }
 
-void Database_BST::PRINT()
+void Database_BST::POST_DELETE(Database_BST_Node *curNode) // delete memory use post order
 {
-    IN_ORDER(root);
-}
-
-void Database_BST::POST_DELETE(Database_BST_Node *curNode)
-{
-
     if (curNode == nullptr)
         return;
 
-    POST_DELETE(curNode->getLeftChild());
-    POST_DELETE(curNode->getRightChild());
+    POST_DELETE(curNode->getLeftChild()); // recursive
+    POST_DELETE(curNode->getRightChild()); // recursive
 
     if (nullptr != curNode)
     {
@@ -184,116 +167,113 @@ void Database_BST::POST_DELETE(Database_BST_Node *curNode)
     }
 }
 
-void Database_BST::SEARCH_TRAVERSAL(Queue *queue, Database_BST_Node *present)
+void Database_BST::SEARCH_TRAVERSAL(Queue *queue, Database_BST_Node *present) // SEARCH command's post-order to use iterative. It have argument queue and present
 {
-    stack<Database_BST_Node *> stack;
-    while (true)
+    while (true) // infinite loop
     {
-        if (present == NULL)
+        if (present == NULL) // if present node is NULL, return the function
         {
             return;
         }
 
-        if (present->isInsert == false)
+        if (present->isInsert == false) // if present node is not push to queue
         {
-            stack.push(present);
+            bufferStack.push(present); // if node is not insert in stack, push the node in stack
         }
-        else if (present->isInsert == true)
+        else if (present->isInsert == true) // 
         {
-            while (present->isInsert == true)
+            while (present->isInsert == true) // judge push to queue
             {
-                stack.pop();
-                if (stack.empty())
+                bufferStack.pop(); // pop for make next top
+                if (bufferStack.empty()) // if stack is empty
                 {
                     return;
                 }
-                present = stack.top();
+                present = bufferStack.top(); // present node is stack's top.(pop function is using assign present to top)
             }
-
-            present = stack.top();
         }
 
         if ((present->getLeftChild() != NULL && present->getLeftChild()->isInsert == false) || (present->getRightChild() != NULL && present->getRightChild()->isInsert == false))
         {
-            if (present->getLeftChild() != NULL && present->getLeftChild()->isInsert == false)
+            if (present->getLeftChild() != NULL && present->getLeftChild()->isInsert == false) // if present node is have left child and not insert to queue
             {
-                present = present->getLeftChild();
+                present = present->getLeftChild(); // change present node
 
-                goto repeat; // ginore push to stack
+                goto repeat; // ignore push to stack
             }
-            else if (present->getRightChild() != NULL && present->getRightChild()->isInsert == false)
+            else if (present->getRightChild() != NULL && present->getRightChild()->isInsert == false) // if present node is have right child and not insert to queue
             {
-                present = present->getRightChild();
+                present = present->getRightChild(); // change present node
 
                 goto repeat; // ignore push to stack
             }
         }
         else
         {
-            queue->push(present->getNumber(), present->getTitle());
-            stack.pop(); // insert after q, pop stack's top node
-            present->isInsert = true;
+            queue->push(present->getNumber(), present->getTitle()); // push to queue. and queue has tree node's title(file name), number
+            bufferStack.pop(); // insert after q, pop stack's top node
+            present->isInsert = true; // after push to queue. change isInsert variable to judge next.
         }
 
-        if (stack.empty() == false)
+        if (bufferStack.empty() == false) // if stack is not empty
         {
-            present = stack.top();
+            present = bufferStack.top(); // present node is stack's top node
         }
-        else if (stack.empty() == true)
+        else if (bufferStack.empty() == true) // if stack is empty
         {
-            return;
+            return; // return the function
         }
 
-    repeat:;
+    repeat:; // ; is use to prevent syntax error.
     }
 }
 
-void Database_BST::SEARCH_BOYERMOORE(Queue *q, string title, string word, int lengthOfTitle, int lengthOfWord)
+void Database_BST::SEARCH_BOYERMOORE(Queue *q, string title, string word, int lengthOfTitle, int lengthOfWord) // SEARCH command's Boyer-Moore algorithm
 {
-    int count = 0, temp = 0, wordMoveCount = 0;
-    int minusPrint = lengthOfWord - 1;
-    int differLength = lengthOfTitle - lengthOfWord;
-    int bch[500];
+    int count = 0, temp = 0, wordMoveCount = 0; // count is for array bch's index
+    int minusPrint = lengthOfWord - 1; // minusPrint is word(finding)'s length - 1
+    int differLength = lengthOfTitle - lengthOfWord; // differLength is difference between title's length and word's length
+    int bch[500]; // bad character int array, size is 500
 
-    while (count < 500)
+    while (count < 500) // array bch's index<500
     {
-        bch[count] = -1;
-        count++;
+        bch[count] = -1; // initialize array bch to -1 value
+        count++; // count=count+1
     }
 
-    for (count = 0; count < lengthOfWord; count++)
+    for (count = 0; count < lengthOfWord; count++) // counting until lengthOfWord
     {
-        temp = word[count];
-        bch[temp] = count;
+        temp = word[count]; // temp is for have one letter(convert to integer)
+        bch[temp] = count; // save count value to bch's temp index
     }
 
-    while (!(wordMoveCount > differLength))
+    while (!(wordMoveCount > differLength)) // word moving relative for title
     {
-        while (!(minusPrint < 0) && word[minusPrint] == title[wordMoveCount + minusPrint])
-            minusPrint--;
+        while (!(minusPrint < 0) && word[minusPrint] == title[wordMoveCount + minusPrint]) // while corresponding title and word, postfix decrement for minusPrint variable
+            minusPrint--; // postfix decrement operate
 
-        int titleIndex = wordMoveCount + minusPrint;
-        int bchIndex = title[titleIndex];
+        int titleIndex = wordMoveCount + minusPrint; // title index is same word moving count + judge printing timing variable
+        int bchIndex = title[titleIndex]; // initialize bchIndex variable to title's index to word moving count + judge printing timing variable
 
-        if (minusPrint < 0)
+        if (minusPrint < 0) // if judge printing timing variable is have minus, printing the result
         {
-            out << "\"" << q->getFront()->getTitle() << "\""
+            out << "\"" << q->getFront()->getTitle() << "\"" // printing result
                 << " / " << q->getFront()->getNumber() << endl;
-            return;
+            return; // return the funtion
         }
-        else
-        {
-            if (minusPrint - bch[bchIndex] > 1)
+        else // if judge printing timing variable is have 0, or plus value
+        { // next setting for word moving relative for title
+            if (minusPrint - bch[bchIndex] > 1) // if left hand side is bigger than 1
             {
-                wordMoveCount += minusPrint - bch[bchIndex];
+                wordMoveCount += minusPrint - bch[bchIndex]; // setting the wordMoveCount
             }
-            else if (minusPrint - bch[bchIndex] < 1)
+            else if (minusPrint - bch[bchIndex] < 1)  // if left hand side is smaller than 1
             {
-                wordMoveCount += 1;
+                wordMoveCount += 1; // word moving counting increment
             }
-            else
+            else // if left hand side is same with 1
             {
-                wordMoveCount += 1;
+                wordMoveCount += 1; // word moving counting increment
             }
         }
     }

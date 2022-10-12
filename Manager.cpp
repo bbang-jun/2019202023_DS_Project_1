@@ -292,7 +292,7 @@ void Manager::MOVE()
 void Manager::PRINT()
 {
     out << "=======PRINT================" << endl;
-    tree->PRINT();
+    tree->IN_ORDER(tree->getRoot());
     out << "============================" << endl<<endl;
     if (tree->getRoot() == NULL)
     {

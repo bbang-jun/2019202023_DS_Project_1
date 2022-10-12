@@ -66,15 +66,15 @@ public:
     Database_BST();
     ~Database_BST();
     Database_BST_Node *getRoot();
+    
     void INSERT(string command, int number, string folder, string title, Database_BST_Node *curNode);
     void DELETES(int number);
     void IN_ORDER(Database_BST_Node *curNode);
+    stack<Database_BST_Node *> bufferStack;
     Database_BST_Node *PRE_ORDER_SELECT(Database_BST_Node *curNode, int numberBST);
-    void PRINT();
     void POST_DELETE(Database_BST_Node *curNode); // 후위순회 순으로 동적할당 해제하는 함수
     void SEARCH_TRAVERSAL(Queue *queue, Database_BST_Node *initial);
     void SEARCH_BOYERMOORE(Queue *q, string title, string word, int lengthOfTitle, int lengthOfWord);
-    void numberFind(Database_BST_Node *curNode);
 };
 
 class QNode
