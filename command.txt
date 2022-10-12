@@ -1,7 +1,9 @@
 LOAD
 ADD new_files new_filesnumbers.csv
-MOVE
+MODIFY img_files "airplane fly on the mountain" 1000
+MOVE 
 PRINT
 SEARCH "the"
 SELECT 500
+EDIT -l 70
 EXIT

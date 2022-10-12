@@ -132,6 +132,7 @@ void Loaded_LIST::DELETE(string folder, string title, Loaded_LIST_Node *node)
         curD2Node->nodeHead = curD2Node->nodeHead->getNext();
         curD2Node->setNext(curD2Node->nodeHead);
         delete delNode;
+        delete curD2Node;
     }
     else if (curD2Node->nodeTail == delNode)
     { // tail 삭제
@@ -142,7 +143,7 @@ void Loaded_LIST::DELETE(string folder, string title, Loaded_LIST_Node *node)
     { // head와 tail제외 중간 삭제
         prevNode->setNext(delNode->getNext());
 
-        free(delNode);
+        delete delNode;
     }
 }
 
@@ -227,21 +228,31 @@ void Loaded_LIST::PRINT()
 {
     if (folderHead == NULL)
     {
+        cout<<"NULL"<<endl;
         return;
     }
     D2Node *curD2Node = folderHead;
     Loaded_LIST_Node *curNode = folderHead->nodeTail;
 
-    while (curD2Node != NULL)
+    while (curD2Node->getD2Next() != NULL)
     {
         curNode = curD2Node->nodeHead;
-        while (curNode != NULL)
+        while (curNode->getNext() != NULL)
         {
             cout << curNode->getTitle() << "/" << curNode->getNumber() << endl;
             curNode = curNode->getNext();
         }
+        cout << curNode->getTitle() << "/" << curNode->getNumber() << endl;
         curD2Node = curD2Node->getD2Next();
     }
+
+    curNode = curD2Node->nodeHead;
+        while (curNode->getNext() != NULL)
+        {
+            cout << curNode->getTitle() << "/" << curNode->getNumber() << endl;
+            curNode = curNode->getNext();
+        }
+        cout << curNode->getTitle() << "/" << curNode->getNumber() << endl;
 }
 
 bool Loaded_LIST::LOADED_LIST_CHECK()

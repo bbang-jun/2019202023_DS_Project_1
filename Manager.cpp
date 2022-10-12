@@ -1,5 +1,6 @@
 #include "Manager.h"
 #include <algorithm>
+//#include <stack>
 
 void Run(const char *filepath);
 void LOAD(const char *filepath);
@@ -14,11 +15,6 @@ void EXIT();
 
 Manager::~Manager()
 {
-    if (fout.is_open())
-        fout.close();
-
-    if (ferr.is_open())
-        ferr.close();
     delete list;
 }
 
@@ -28,6 +24,7 @@ Manager::Manager()
     tree = new Database_BST;
     queue = new Queue;
     stack = new Stack;
+    image = new Image;
 }
 
 void Manager::Run(const char *filepath)
@@ -41,7 +38,8 @@ void Manager::Run(const char *filepath)
         {
             getline(inCommand, command, '\n');
             int str_length = command.length();
-            char *charCommand = new char[str_length];
+            //char *charCommand = new char[str_length];
+            char charCommand[100];
             strcpy(charCommand, command.c_str());
             char *ptr = strtok(charCommand, " ");
 
@@ -106,7 +104,8 @@ void Manager::LOAD()
         {
             getline(inCSV, number, ','); // string
             int str_length1 = number.length();
-            char *ch1 = new char[str_length1];
+            //char *ch1 = new char[str_length1];
+            char ch1[100];
             strcpy(ch1, number.c_str()); // string -> char*
             char *ptr1 = strtok(ch1, ",\n ");
             if (ptr1 == NULL)
@@ -125,13 +124,14 @@ void Manager::LOAD()
 
             getline(inCSV, title, '\n'); // string
             int str_length2 = title.length();
-            char *ch2 = new char[str_length2];
+            //char *ch2 = new char[str_length2];
+            char ch2[100];
             strcpy(ch2, title.c_str()); // string -> char*
             char *ptr2 = strtok(ch2, "\r\n.RAW");
             title = ptr2; // char* -> string 후 노드에 넣기
             list->INSERT(command, number, "img_files", title, NULL);
         }
-        // list->PRINT();
+        list->PRINT();
 
         inCSV.close();
         cout << "===================" << endl
@@ -172,7 +172,8 @@ void Manager::ADD()
         {
             getline(newCSV, number, ','); // string
             int str_length1 = number.length();
-            char *ch3 = new char[str_length1];
+            //char *ch3 = new char[str_length1];
+            char ch3[100];
             strcpy(ch3, number.c_str()); // string -> char*
             char *ptr3 = strtok(ch3, ",\n ");
 
@@ -191,7 +192,8 @@ void Manager::ADD()
 
             getline(newCSV, title, '\n'); // string
             int str_length2 = title.length();
-            char *ch4 = new char[str_length2];
+            //char *ch4 = new char[str_length2];
+            char ch4[100];
             strcpy(ch4, title.c_str()); // string -> char*
             char *ptr4 = strtok(ch4, ".RAW\r\n");
             title = ptr4; // char* -> string 후 노드에 넣기
@@ -234,7 +236,6 @@ void Manager::MODIFY()
         cout << "=====================" << endl
              << endl;
     }
-    //list->PRINT();
 }
 
 void Manager::MOVE()
@@ -255,14 +256,14 @@ void Manager::MOVE()
             numberBST = stoi(curNode->getNumber());
             tree->INSERT(command, numberBST, curNode->getFolder(), curNode->getTitle(), tree->getRoot());
 
-            //list->DELETE(curNode->getFolder(), curNode->getTitle(), prevNode);
+            list->DELETE(curNode->getFolder(), curNode->getTitle(), prevNode);
             curNode = prevNode;
         }
         if (curNode == curD2Node->getNext())
         {
             numberBST = stoi(curNode->getNumber());
             tree->INSERT(command, numberBST, curNode->getFolder(), curNode->getTitle(), tree->getRoot());
-            //list->DELETE(curNode->getFolder(), curNode->getTitle(), prevNode);
+            list->DELETE(curNode->getFolder(), curNode->getTitle(), prevNode);
         }
         curD2Node = prevD2Node;
     }
@@ -275,16 +276,17 @@ void Manager::MOVE()
             numberBST = stoi(curNode->getNumber());
             tree->INSERT(command, numberBST, curNode->getFolder(), curNode->getTitle(), tree->getRoot());
 
-            //list->DELETE(curNode->getFolder(), curNode->getTitle(), prevNode);
+            list->DELETE(curNode->getFolder(), curNode->getTitle(), prevNode);
             curNode = prevNode;
         }
         if (curNode == curD2Node->getNext())
         {
             numberBST = stoi(curNode->getNumber());
             tree->INSERT(command, numberBST, curNode->getFolder(), curNode->getTitle(), tree->getRoot());
-            //list->DELETE(curNode->getFolder(), curNode->getTitle(), prevNode);
+            list->DELETE(curNode->getFolder(), curNode->getTitle(), prevNode);
         }
     }
+    //list->PRINT();
 }
 
 void Manager::PRINT()
@@ -292,7 +294,6 @@ void Manager::PRINT()
     cout<<"=======PRINT================"<<endl;
     tree->PRINT();
     cout<<"============================"<<endl;
-    //list->PRINT();
     if(tree->getRoot()==NULL){
         cout<<"========ERROR========"<<endl;
         cout<<"500"<<endl;
@@ -333,24 +334,21 @@ void Manager::SELECT()
         return;
     }
     number = tokNumber;
-    int selectNum=stoi(number);
-    Database_BST_Node*selectNode = tree->PRE_ORDER_SELECT(tree->getRoot(), selectNum);
-    string path;
-    path.append(selectNode->getFolder());
-    path.append("/");
-    path.append(selectNode->getTitle());
-    path.append(".RAW");
-    cout<<path<<endl;
-    
-    FILE* output_file;
+    int selectNum = stoi(number);
+    Database_BST_Node *selectNode = tree->PRE_ORDER_SELECT(tree->getRoot(), selectNum);
+    inputPath.append(selectNode->getFolder());
+    inputPath.append("/");
+    inputPath.append(selectNode->getTitle());
+    inputPath.append(".RAW");
+    outFileName.append(selectNode->getTitle());
+    outFileName.append("_flipped");
 
-    unsigned char output_data[256][256];
-
-    input_file=fopen(path.c_str(), "rb");
-    if(input_file==NULL){
-        cout<<"file not found"<<endl;
+    input_file = fopen(inputPath.c_str(), "rb");
+    if (input_file == NULL)
+    {
+        cout << "file not found" << endl;
     }
-    fread(input_data, sizeof(unsigned char), 256*256, input_file);
+    fread(input_data, sizeof(unsigned char), 256 * 256, input_file);
 
     // for(int i=0; i<256; i++)
     //     for(int j=0; j<256; j++)
@@ -360,46 +358,79 @@ void Manager::SELECT()
     // fwrite(output_data, sizeof(unsigned char), 256*256, output_file);
     fclose(input_file);
 
-    cout<<"==========SELECT============"<<endl;
-    cout<<"SUCCESS"<<endl;
-    cout<<"=========================="<<endl;
+    cout << "==========SELECT============" << endl;
+    cout << "SUCCESS" << endl;
+    cout << "==========================" << endl;
 }
 
 void Manager::EDIT()
 {
+    FILE *output_file;
+    unsigned char output_data[256][256];
     char *tokWay, *tokLight;
     string way;
-    int light=0;
+    int light = 0;
     tokWay = strtok(NULL, " ");
-    if (tokWay == NULL){
-        cout<<"========ERROR========"<<endl;
-        cout<<"800"<<endl;
-        cout<<"===================="<<endl;
+    if (tokWay == NULL)
+    {
+        cout << "========ERROR========" << endl;
+        cout << "800" << endl;
+        cout << "====================" << endl;
         return;
     }
-    way=tokWay;
+    way = tokWay;
 
-    if(way=="-f"){
-
+    if (way == "-f")
+    {
     }
-    else if(way=="-l"){
-        tokLight=strtok(NULL, " ");
-        if(tokLight == NULL){
-            cout<<"========ERROR========"<<endl;
-            cout<<"800"<<endl;
-            cout<<"===================="<<endl;
+    else if (way == "-l")
+    {
+        tokLight = strtok(NULL, " ");
+        if (tokLight == NULL)
+        {
+            cout << "========ERROR========" << endl;
+            cout << "800" << endl;
+            cout << "====================" << endl;
             return;
         }
-        else{
-            light=atoi(tokLight);
-            
-        }
-    }
-    else if(way=="-r"){
+        else
+        {
+            light = atoi(tokLight);
+            for (int i = 0; i < 256; i++)
+            {
+                for (int j = 0; j < 256; j++)
+                {
+                    ImageNode *imageNode = new ImageNode;
+                    imageNode->setImagePixel(input_data[i][j]);
+                    image->push(imageNode);
+                }
+            }
+            ImageNode *curNode;
 
+            for(int i=0; i<256; i++){
+                for(int j=0; j<256; j++){
+                    int sum = image->q_pop()->getImagePixel()+light;
+                    if(sum>255){
+                        output_data[i][j] = 255;
+                    }
+                    else if(sum<0){
+                        output_data[i][j] = 0;
+                    }
+                    else if(sum>=0 && sum<=255){
+                        output_data[i][j]=sum;
+                    }
+                }
+            }
+            outputPath.append("./Result/");
+            outputPath.append(outFileName);
+            output_file = fopen(outputPath.c_str(), "wb");
+            fwrite(output_data, sizeof(unsigned char), 256*256, output_file);
+            }
     }
-
-    
+    else if (way == "-r")
+    {
+        
+    }
 }
 
 void Manager::EXIT()
