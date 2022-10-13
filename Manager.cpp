@@ -84,7 +84,7 @@ void Manager::Run(const char *filepath)
             else{
                 out<<"========ERROR========"<<endl;
                 out << "777" << endl;
-                out << "====================" << endl
+                out << "====================" << endl;
             }
         }
     }
