@@ -84,7 +84,7 @@ void Manager::Run(const char *filepath)
             else{
                 out<<"========ERROR========"<<endl;
                 out << "777" << endl;
-                out << "====================" << endl;
+                out << "====================" << endl<<endl;
             }
         }
     }
@@ -156,7 +156,7 @@ void Manager::ADD() // command ADD
     {
         out << "========ERROR========" << endl;
         out << "200" << endl;
-        out << "====================" << endl;
+        out << "====================" << endl <<endl;
         return;
     }
 
@@ -165,7 +165,7 @@ void Manager::ADD() // command ADD
     {
         out << "========ERROR========" << endl;
         out << "200" << endl;
-        out << "====================" << endl;
+        out << "====================" << endl<<endl;
     }
     else
     {
@@ -249,7 +249,8 @@ void Manager::MOVE() // MOVE command
     if(list->folderHead==NULL){ // error validation
         out<<"========ERROR========"<<endl;
         out<<"400"<<endl;
-        out<<"===================="<<endl;
+        out<<"===================="<<endl<<endl;
+        return;
     }
     D2Node *prevD2Node = list->folderHead;
     D2Node *curD2Node = list->folderTail;
@@ -296,15 +297,17 @@ void Manager::MOVE() // MOVE command
 
 void Manager::PRINT() // PRINT command
 {
-    out << "=======PRINT================" << endl;
-    tree->IN_ORDER(tree->getRoot()); // print node's information in BST to use In-order traversal
-    out << "============================" << endl<<endl;
-    if (tree->getRoot() == NULL) // error validation
+        if (tree->getRoot() == NULL) // error validation
     {
         out << "========ERROR========" << endl;
         out << "500" << endl;
-        out << "====================" << endl;
+        out << "====================" << endl<<endl;
+        return;
     }
+    out << "=======PRINT================" << endl;
+    tree->IN_ORDER(tree->getRoot()); // print node's information in BST to use In-order traversal
+    out << "============================" << endl<<endl;
+
 }
 
 void Manager::SEARCH() // SEARCH command
@@ -381,7 +384,7 @@ void Manager::EDIT() // EDIT command
     {
         out << "========ERROR========" << endl;
         out << "800" << endl;
-        out << "====================" << endl;
+        out << "====================" << endl<<endl;
         return;
     }
     way = tokWay;
@@ -422,7 +425,7 @@ void Manager::EDIT() // EDIT command
         {
             out << "========ERROR========" << endl;
             out << "800" << endl;
-            out << "====================" << endl;
+            out << "====================" << endl<<endl;
             return;
         }
         else

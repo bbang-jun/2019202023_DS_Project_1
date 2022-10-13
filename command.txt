@@ -4,10 +4,10 @@ MODIFY img_files "airplane fly on the mountain" 1000
 MOVE 
 PRINT
 SEARCH "the"
-SELECT 500
+SELECT 800
 EDIT -f
 SELECT 800
 EDIT -l 70
-SELECT 999
+SELECT 800
 EDIT -r
 EXIT

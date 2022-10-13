@@ -69,9 +69,13 @@ img_files / "airplane fly on the mountain" / 1000
 "airplane fly on the mountain" / 1000
 ===========================
 
-========ERROR========
-700
-====================
+==========SELECT============
+SUCCESS
+==========================
+
+==========EDIT============
+SUCCESS
+=========================
 
 ==========SELECT============
 SUCCESS
