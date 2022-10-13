@@ -11,13 +11,13 @@ using namespace std;
 #include <algorithm>
 #include "ImageNode.h"
 
-class Manager
+class Manager // Manager class is the logic implementation for all commands
 {
 private:
     ofstream out;
 public:
-    FILE* input_file;
-    unsigned char input_data[256][256];
+    FILE* inputFile; 
+    unsigned char inputData[256][256]; // EDIT command
     const char *filepath;
     string command, number, title, folder;
     string firstArg, secondArg;
@@ -27,8 +27,8 @@ public:
     Queue* queue;
     Stack* stack;
     Image* image;
-    Manager();
-    ~Manager();
+    Manager(); // constructor
+    ~Manager(); // destructor
     void Run(const char* filepath);
     void LOAD();
     void ADD();
@@ -39,5 +39,4 @@ public:
     void SELECT();
     void EDIT();
     void EXIT();
-
 };

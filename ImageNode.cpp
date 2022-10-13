@@ -26,17 +26,7 @@ unsigned char ImageNode::getImagePixel()
 }
 
 // Image class 
-void Image::setHead(ImageNode *newNode)
-{
-    this->head = newNode;
-}
-
-ImageNode *Image::getHead()
-{
-    return this->head;
-}
-
-void Image::push(ImageNode *newNode)
+void Image::push(ImageNode *newNode) // push of stack & push of queue
 {
 
     if (head == NULL)
@@ -55,7 +45,7 @@ void Image::push(ImageNode *newNode)
         curNode->setNext(newNode);
     }
 }
-ImageNode *Image::s_pop()
+ImageNode *Image::s_pop() // return most last inserted ImageNode
 { // pop of stack
     ImageNode *curNode = head;
     ImageNode *tempNode;
@@ -75,7 +65,7 @@ ImageNode *Image::s_pop()
         return tempNode;
     }
 }
-ImageNode *Image::q_pop()
+ImageNode *Image::q_pop() // return first inserted ImageNode
 { // pop of queue
     if (head->getNext() == NULL)
     {
@@ -88,4 +78,16 @@ ImageNode *Image::q_pop()
         tempNode->setNext(NULL);
         return head;
     }
+}
+
+void Image::deleteMemory(){
+    ImageNode* delNode;
+    ImageNode* curNode=head;
+
+    while(curNode->getNext()!=NULL){
+        delNode=curNode;
+        curNode = curNode->getNext();
+        delete delNode;
+    }
+    delete curNode;
 }

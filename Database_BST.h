@@ -23,9 +23,9 @@ private:
     Database_BST_Node *next;
 
 public:
-    bool isInsert;
+    bool isInsert; // for use iterative post-order
 
-    Database_BST_Node();
+    Database_BST_Node(); // constructor
     void setNumber(int number);
     int getNumber();
 
@@ -62,19 +62,18 @@ private:
     Database_BST_Node *parent;
     ofstream out;
 public:
-    int counting;
-    Database_BST();
-    ~Database_BST();
+    int counting; // for counting 300
+    Database_BST(); // constructor
+    ~Database_BST(); // destructor
     Database_BST_Node *getRoot();
     
     void INSERT(string command, int number, string folder, string title, Database_BST_Node *curNode);
-    void DELETES(int number);
     void IN_ORDER(Database_BST_Node *curNode);
     stack<Database_BST_Node *> bufferStack;
     Database_BST_Node *PRE_ORDER_SELECT(Database_BST_Node *curNode, int numberBST);
-    void POST_DELETE(Database_BST_Node *curNode); // 후위순회 순으로 동적할당 해제하는 함수
-    void SEARCH_TRAVERSAL(Queue *queue, Database_BST_Node *initial);
-    void SEARCH_BOYERMOORE(Queue *q, string title, string word, int lengthOfTitle, int lengthOfWord);
+    void POST_DELETE(Database_BST_Node *curNode); // post order memory deallocate
+    void SEARCH_TRAVERSAL(Queue *queue, Database_BST_Node *initial); // iterative post order
+    void SEARCH_BOYERMOORE(Queue *q, string title, string word, int lengthOfTitle, int lengthOfWord); // find word using boyer-moore algorithm
 };
 
 class Stack // Stack class

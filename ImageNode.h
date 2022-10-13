@@ -4,6 +4,7 @@
 #include <fstream>
 using namespace std;
 
+// ImageNode class for EDIT command
 class ImageNode{
 	private:
 		ImageNode* next;
@@ -18,14 +19,14 @@ class ImageNode{
 		unsigned char getImagePixel();
 };
 
+// Image class for EDIT command
 class Image{
 	private:
 		ImageNode* head;
 		
 	public:
-		void setHead(ImageNode* node);
-		ImageNode* getHead();
-		void push(ImageNode* node);
+		void push(ImageNode* node); // push of stack, push of queue
 		ImageNode* s_pop(); // pop of stack
 		ImageNode* q_pop(); // pop of queue
+		void deleteMemory();
 };
