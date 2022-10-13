@@ -183,7 +183,7 @@ void Database_BST::SEARCH_TRAVERSAL(Queue *queue, Database_BST_Node *present) //
         {
             bufferStack.push(present); // if node is not insert in stack, push the node in stack
         }
-        else if (present->isInsert == true) //
+        else if (present->isInsert == true) // judge push to queue
         {
             while (present->isInsert == true) // judge push to queue
             {
@@ -231,7 +231,7 @@ void Database_BST::SEARCH_TRAVERSAL(Queue *queue, Database_BST_Node *present) //
     }
 }
 
-void Database_BST::SEARCH_BOYERMOORE(Queue *q, string title, string word, int lengthOfTitle, int lengthOfWord) // SEARCH command's Boyer-Moore algorithm
+void Database_BST::SEARCH_BOYERMOORE(Queue *queue, string title, string word, int lengthOfTitle, int lengthOfWord) // SEARCH command's Boyer-Moore algorithm
 {
     int count = 0, temp = 0, wordMoveCount = 0;      // count is for array bch's index
     int minusPrint = lengthOfWord - 1;               // minusPrint is word(finding)'s length - 1
@@ -260,8 +260,8 @@ void Database_BST::SEARCH_BOYERMOORE(Queue *q, string title, string word, int le
 
         if (minusPrint < 0) // if judge printing timing variable is have minus, printing the result
         {
-            out << "\"" << q->getFront()->getTitle() << "\"" // printing result
-                << " / " << q->getFront()->getNumber() << endl;
+            out << "\"" << queue->getFront()->getTitle() << "\"" // printing result
+                << " / " << queue->getFront()->getNumber() << endl;
             return; // return the funtion
         }
         else                                    // if judge printing timing variable is have 0, or plus value

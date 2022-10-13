@@ -205,7 +205,7 @@ void Manager::ADD() // command ADD
             list->INSERT(command, number, folder, title, NULL); // insert node in Loaded_LIST
         }
 
-        out << "success" << endl;
+        out << "SUCCESS" << endl;
         out << "===================" << endl
              << endl;
         newCSV.close();
@@ -293,6 +293,10 @@ void Manager::MOVE() // MOVE command
         }
     }
     list->ALLDELETE(); // delete all node in Loaded_LIST structure
+    
+    out<<"=======MOVE========"<<endl;
+    out<<"SUCCESS"<<endl;
+    out<<"==================="<<endl<<endl;
 }
 
 void Manager::PRINT() // PRINT command
