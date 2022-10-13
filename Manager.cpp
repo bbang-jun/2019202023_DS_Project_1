@@ -337,15 +337,15 @@ void Manager::SELECT() // SELECT command
     outFileName = ""; // initialize for re-used
     char *tokNumber;
     tokNumber = strtok(NULL, " ");
-    if (tokNumber == NULL)
+    number = tokNumber;
+    int selectNum = stoi(number); // string to integer
+    if ((tree->SELECT_EXIST(tree->getRoot(), selectNum) != true) || tokNumber==NULL)
     {
         out << "========ERROR========" << endl;
         out << "700" << endl;
-        out << "====================" << endl;
+        out << "====================" << endl<<endl;
         return;
     }
-    number = tokNumber;
-    int selectNum = stoi(number); // string to integer
     Database_BST_Node *selectNode = tree->PRE_ORDER_SELECT(tree->getRoot(), selectNum); // use pre-order traversal, to find file number
     inputPath.append(selectNode->getFolder()); // make input file path for EDIT command
     inputPath.append("/");

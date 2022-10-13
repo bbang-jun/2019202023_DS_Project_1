@@ -74,6 +74,7 @@ public:
     void POST_DELETE(Database_BST_Node *curNode); // post order memory deallocate
     void SEARCH_TRAVERSAL(Queue *queue, Database_BST_Node *initial); // iterative post order
     void SEARCH_BOYERMOORE(Queue *q, string title, string word, int lengthOfTitle, int lengthOfWord); // find word using boyer-moore algorithm
+    bool SELECT_EXIST(Database_BST_Node *curNode, int number);
 };
 
 class Stack // Stack class

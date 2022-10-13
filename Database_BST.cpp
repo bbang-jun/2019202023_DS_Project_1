@@ -37,7 +37,7 @@ Database_BST::Database_BST()
 }
 
 Database_BST::~Database_BST() // destructor of Database_BST
-{                      
+{
     POST_DELETE(root); // post order way delete
 }
 
@@ -51,8 +51,9 @@ void Database_BST::INSERT(string command, int number, string folder, string titl
         Database_BST_Node *delNode;
         if (curNode->getLeftChild() == NULL) // curNode is root
         {
-            if(curNode->getRightChild()!=NULL){
-                root=curNode->getRightChild();
+            if (curNode->getRightChild() != NULL)
+            {
+                root = curNode->getRightChild();
             }
             delete curNode;
         }
@@ -60,13 +61,15 @@ void Database_BST::INSERT(string command, int number, string folder, string titl
         {
             while (curNode->getLeftChild() != NULL) // find most small node and delete
             {
-                if(curNode->getLeftChild()->getLeftChild()!=NULL){
-                    delNode=curNode->getLeftChild();
+                if (curNode->getLeftChild()->getLeftChild() != NULL)
+                {
+                    delNode = curNode->getLeftChild();
                     curNode->setLeftChild(delNode->getRightChild());
                     delete delNode;
                 }
                 curNode = curNode->getLeftChild();
-                if (curNode->getLeftChild() == NULL){
+                if (curNode->getLeftChild() == NULL)
+                {
                     delete curNode;
                 }
             }
@@ -74,23 +77,23 @@ void Database_BST::INSERT(string command, int number, string folder, string titl
         counting--;
     }
     if (root == NULL) // case: root is NULL
-    {  // setting node
+    {                 // setting node
         Database_BST_Node *newNode = new Database_BST_Node;
         newNode->setNumber(number);
         newNode->setFolder(folder);
         newNode->setTitle(title);
-        newNode->setLeftChild(NULL);  
-        newNode->setRightChild(NULL); 
-        root = newNode;               
+        newNode->setLeftChild(NULL);
+        newNode->setRightChild(NULL);
+        root = newNode;
         counting++;
         return;
     }
     else if (curNode->getNumber() > number) // case: insert left
-    { 
+    {
         if (curNode->getLeftChild() == NULL)
         { // setting node
             Database_BST_Node *newNode = new Database_BST_Node;
-            newNode->setNumber(number); 
+            newNode->setNumber(number);
             newNode->setFolder(folder);
             newNode->setTitle(title);
             newNode->setLeftChild(NULL);
@@ -100,18 +103,18 @@ void Database_BST::INSERT(string command, int number, string folder, string titl
             return;
         }
         else
-        { 
+        {
             if (curNode->getLeftChild()->getNumber() == number)
                 return;
             INSERT(command, number, folder, title, curNode->getLeftChild()); // if left child is exist, go to leftchild and reinsert
         }
     }
     else if (curNode->getNumber() < number)
-    { 
+    {
         if (curNode->getRightChild() == NULL) // bst is not have same value node
         {
             Database_BST_Node *newNode = new Database_BST_Node;
-            newNode->setNumber(number); 
+            newNode->setNumber(number);
             newNode->setFolder(folder);
             newNode->setTitle(title);
             newNode->setLeftChild(NULL);
@@ -121,7 +124,7 @@ void Database_BST::INSERT(string command, int number, string folder, string titl
             return;
         }
         else
-        { 
+        {
             if (curNode->getRightChild()->getNumber() == number) // bst is not have same value node
                 return;
             INSERT(command, number, folder, title, curNode->getRightChild()); // if right child is exist, go to right and reinsert
@@ -157,7 +160,7 @@ void Database_BST::POST_DELETE(Database_BST_Node *curNode) // delete memory use 
     if (curNode == nullptr)
         return;
 
-    POST_DELETE(curNode->getLeftChild()); // recursive
+    POST_DELETE(curNode->getLeftChild());  // recursive
     POST_DELETE(curNode->getRightChild()); // recursive
 
     if (nullptr != curNode)
@@ -180,11 +183,11 @@ void Database_BST::SEARCH_TRAVERSAL(Queue *queue, Database_BST_Node *present) //
         {
             bufferStack.push(present); // if node is not insert in stack, push the node in stack
         }
-        else if (present->isInsert == true) // 
+        else if (present->isInsert == true) //
         {
             while (present->isInsert == true) // judge push to queue
             {
-                bufferStack.pop(); // pop for make next top
+                bufferStack.pop();       // pop for make next top
                 if (bufferStack.empty()) // if stack is empty
                 {
                     return;
@@ -211,8 +214,8 @@ void Database_BST::SEARCH_TRAVERSAL(Queue *queue, Database_BST_Node *present) //
         else
         {
             queue->push(present->getNumber(), present->getTitle()); // push to queue. and queue has tree node's title(file name), number
-            bufferStack.pop(); // insert after q, pop stack's top node
-            present->isInsert = true; // after push to queue. change isInsert variable to judge next.
+            bufferStack.pop();                                      // insert after q, pop stack's top node
+            present->isInsert = true;                               // after push to queue. change isInsert variable to judge next.
         }
 
         if (bufferStack.empty() == false) // if stack is not empty
@@ -230,30 +233,30 @@ void Database_BST::SEARCH_TRAVERSAL(Queue *queue, Database_BST_Node *present) //
 
 void Database_BST::SEARCH_BOYERMOORE(Queue *q, string title, string word, int lengthOfTitle, int lengthOfWord) // SEARCH command's Boyer-Moore algorithm
 {
-    int count = 0, temp = 0, wordMoveCount = 0; // count is for array bch's index
-    int minusPrint = lengthOfWord - 1; // minusPrint is word(finding)'s length - 1
+    int count = 0, temp = 0, wordMoveCount = 0;      // count is for array bch's index
+    int minusPrint = lengthOfWord - 1;               // minusPrint is word(finding)'s length - 1
     int differLength = lengthOfTitle - lengthOfWord; // differLength is difference between title's length and word's length
-    int bch[500]; // bad character int array, size is 500
+    int bch[500];                                    // bad character int array, size is 500
 
     while (count < 500) // array bch's index<500
     {
         bch[count] = -1; // initialize array bch to -1 value
-        count++; // count=count+1
+        count++;         // count=count+1
     }
 
     for (count = 0; count < lengthOfWord; count++) // counting until lengthOfWord
     {
         temp = word[count]; // temp is for have one letter(convert to integer)
-        bch[temp] = count; // save count value to bch's temp index
+        bch[temp] = count;  // save count value to bch's temp index
     }
 
     while (!(wordMoveCount > differLength)) // word moving relative for title
     {
         while (!(minusPrint < 0) && word[minusPrint] == title[wordMoveCount + minusPrint]) // while corresponding title and word, postfix decrement for minusPrint variable
-            minusPrint--; // postfix decrement operate
+            minusPrint--;                                                                  // postfix decrement operate
 
         int titleIndex = wordMoveCount + minusPrint; // title index is same word moving count + judge printing timing variable
-        int bchIndex = title[titleIndex]; // initialize bchIndex variable to title's index to word moving count + judge printing timing variable
+        int bchIndex = title[titleIndex];            // initialize bchIndex variable to title's index to word moving count + judge printing timing variable
 
         if (minusPrint < 0) // if judge printing timing variable is have minus, printing the result
         {
@@ -261,13 +264,13 @@ void Database_BST::SEARCH_BOYERMOORE(Queue *q, string title, string word, int le
                 << " / " << q->getFront()->getNumber() << endl;
             return; // return the funtion
         }
-        else // if judge printing timing variable is have 0, or plus value
-        { // next setting for word moving relative for title
+        else                                    // if judge printing timing variable is have 0, or plus value
+        {                                       // next setting for word moving relative for title
             if (minusPrint - bch[bchIndex] > 1) // if left hand side is bigger than 1
             {
                 wordMoveCount += minusPrint - bch[bchIndex]; // setting the wordMoveCount
             }
-            else if (minusPrint - bch[bchIndex] < 1)  // if left hand side is smaller than 1
+            else if (minusPrint - bch[bchIndex] < 1) // if left hand side is smaller than 1
             {
                 wordMoveCount += 1; // word moving counting increment
             }
@@ -277,4 +280,17 @@ void Database_BST::SEARCH_BOYERMOORE(Queue *q, string title, string word, int le
             }
         }
     }
+}
+
+bool Database_BST::SELECT_EXIST(Database_BST_Node *curNode, int number)
+{
+    if(curNode==NULL){
+        return false;
+    }
+    else if (curNode->getNumber()==number)
+            return true; // for find image path, it is node
+    else if (curNode->getNumber() > number)
+            SELECT_EXIST(curNode->getLeftChild(), number); // recursive
+    else if (curNode->getNumber() < number)
+            SELECT_EXIST(curNode->getRightChild(), number); // recursive
 }
